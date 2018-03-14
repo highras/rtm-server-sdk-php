@@ -1,5 +1,5 @@
 {
-    "name": "rtm/php-sdk",
+    "name": "highras/rtm",
     "type": "library",
     "description": "php-sdk for RTM",
     "keywords": ["rtm"],
@@ -11,14 +11,15 @@
             "email": "jianjun.zhao@funplus.com"
         }
     ],
+    "version": "dev-master",
     "require": {
         "php": ">=5.4.0",
-		"simplito/elliptic-php": "=1.0.1"
+        "simplito/elliptic-php": "=1.0.1",
+        "highras/fpnn": "dev-master"
     },
     "autoload": {
-        "psr-0": {
-            "Fpnn": "src/",
-            "Rtm": "src/"
+        "psr-4": {
+            "highras\\rtm\\": "src/"
         }
     },
     "repositories": {

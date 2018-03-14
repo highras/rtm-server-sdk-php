@@ -2,7 +2,7 @@
 
 require_once "./vendor/autoload.php";
 
-use Rtm\RTMServerClient;
+use highras\rtm\RTMServerClient;
 
 $client = new RTMServerClient(1000001, '3a0023b6-bc80-488d-b312-c4a139b5ab1a', '117.50.4.158:13315');
 
