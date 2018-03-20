@@ -17,7 +17,7 @@ class RTMServerClient
         $arr = explode(':', $endpoint);
         $this->pid = $pid;
         $this->secretKey = $secretKey;
-        $this->client = new TCPClient($arr[0], $arr[1], $timeout); 
+        $this->client = new TCPClient($arr[0], $arr[1], $timeout);
     }
 
     public function enableEncryptor($peerPubData)
@@ -487,7 +487,71 @@ class RTMServerClient
                 'ext' => $ext,
             ])
         ]);
+    }
 
+    public function getGroupMessage($gid, $num, $desc, $page, $localid = 0, $mtypes = array())
+    {
+        $salt = $this->genSalt();
+        return $this->client->sendQuest("getgroupmsg", array(
+            'pid' => $this->pid,
+            'sign' => $this->genSign($salt),
+            'salt' => $salt,
+            'gid' => $gid,
+            'num' => $num,
+            'desc' => $desc,
+            'page' => $page,
+            'localid' => $localid,
+            'mtypes' => $mtypes,
+        ));
+    }
+
+    public function getRoomMessage($rid, $num, $desc, $page, $localid = 0, $mtypes = array())
+    {
+        $salt = $this->genSalt();
+        return $this->client->sendQuest("getroommsg", array(
+            'pid' => $this->pid,
+            'sign' => $this->genSign($salt),
+            'salt' => $salt,
+            'rid' => $rid,
+            'num' => $num,
+            'desc' => $desc,
+            'page' => $page,
+            'localid' => $localid,
+            'mtypes' => $mtypes,
+        ));
+    }
+
+    public function getBroadcastMessage($num, $desc, $page, $localid = 0, $mtypes = array())
+    {
+        $salt = $this->genSalt();
+        return $this->client->sendQuest("getbroadcastmsg", array(
+            'pid' => $this->pid,
+            'sign' => $this->genSign($salt),
+            'salt' => $salt,
+            'num' => $num,
+            'desc' => $desc,
+            'page' => $page,
+            'localid' => $localid,
+            'mtypes' => $mtypes,
+        ));
+    }
+
+    public function getP2PMessage($uid, $ouid, $num, $direction, $desc, $page, $localid = 0, $mtypes = array())
+    {
+        $salt = $this->genSalt();
+        return $this->client->sendQuest("getp2pmsg", array(
+            'pid' => $this->pid,
+            'sign' => $this->genSign($salt),
+            'salt' => $salt,
+            'uid' => $uid,
+            'ouid' => $ouid,
+            'num' => $num,
+            'direction' => $direction,
+            'desc' => $desc,
+            'page' => $page,
+            'localid' => $localid,
+            'mtypes' => $mtypes,
+        ));
     }
 
 }
