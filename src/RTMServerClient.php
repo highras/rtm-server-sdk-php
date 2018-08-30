@@ -33,12 +33,12 @@ class RTMServerClient
 
     private function genMid()
     {
-        return (time() << 32) + ($this->midSeq++ & 0xffffff);
+        return (int)(microtime(true) * 1000);
     }
 
     private function genSalt()
     {
-        return (time() << 32) + ($this->saltSeq++ & 0xffffff);
+        return (int)(microtime(true) * 1000);
     }
 
     private function genSign($salt)
