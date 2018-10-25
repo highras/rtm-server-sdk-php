@@ -31,106 +31,167 @@ class RTMServerClient
         $this->enableEncryptor($peerPubData);
     }
 
-    private function genMid()
+    private function generateMessageId()
+    {
+        return (int)((int)(microtime(true) * 1000) . mt_rand(10000, 99999));
+    }
+
+    private function generateSalt()
     {
         return (int)(microtime(true) * 1000);
     }
 
-    private function genSalt()
-    {
-        return (int)(microtime(true) * 1000);
-    }
-
-    private function genSign($salt)
+    private function generateSignature($salt)
     {
         return strtoupper(md5($this->pid . ':' . $this->secretKey . ':' . $salt));
     }
 
     public function sendMessage($from, $to, $mtype, $msg, $attrs)
     {
-        $salt = $this->genSalt();
-        $this->client->sendQuest("sendmsg", array(
+        $salt = $this->generateSalt();
+        $mid = $this->generateMessageId();
+        $response = $this->client->sendQuest("sendmsg", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'mtype' => $mtype,
             'from' => $from,
             'to' => $to,
-            'mid' => $this->genMid(),
+            'mid' => $mid,
             'msg' => $msg,
             'attrs' => $attrs
         ));
+
+        return [
+            'mtime' => $response['mtime'],
+            'mid' => $mid,
+        ];
     }
 
+    /**
+     * @param $from
+     * @param $tos
+     * @param $mtype
+     * @param $msg
+     * @param $attrs
+     * @return array
+     * @throws \Exception
+     */
     public function sendMessages($from, $tos, $mtype, $msg, $attrs)
     {
-        $salt = $this->genSalt();
-        $this->client->sendQuest("sendmsgs", array(
+        $salt = $this->generateSalt();
+        $mid = $this->generateMessageId();
+        $response = $this->client->sendQuest("sendmsgs", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'mtype' => $mtype,
             'from' => $from,
             'tos' => $tos,
-            'mid' => $this->genMid(),
+            'mid' => $mid,
             'msg' => $msg,
             'attrs' => $attrs
         ));
+        return [
+            'mtime' => $response['mtime'],
+            'mid' => $mid,
+        ];
     }
 
+    /**
+     * @param $from
+     * @param $gid
+     * @param $mtype
+     * @param $msg
+     * @param $attrs
+     * @return array
+     * @throws \Exception
+     */
     public function sendGroupMessage($from, $gid, $mtype, $msg, $attrs)
     {
-        $salt = $this->genSalt();
-        $this->client->sendQuest("sendgroupmsg", array(
+        $salt = $this->generateSalt();
+        $mid = $this->generateMessageId();
+        $response = $this->client->sendQuest("sendgroupmsg", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'mtype' => $mtype,
             'from' => $from,
             'gid' => $gid,
-            'mid' => $this->genMid(),
+            'mid' => $mid,
             'msg' => $msg,
             'attrs' => $attrs
         ));
+        return [
+            'mtime' => $response['mtime'],
+            'mid' => $mid,
+        ];
     }
 
+    /**
+     * @param $from
+     * @param $rid
+     * @param $mtype
+     * @param $msg
+     * @param $attrs
+     * @return array
+     * @throws \Exception
+     */
     public function sendRoomMessage($from, $rid, $mtype, $msg, $attrs)
     {
-        $salt = $this->genSalt();
-        $this->client->sendQuest("sendroommsg", array(
+        $salt = $this->generateSalt();
+        $mid = $this->generateMessageId();
+        $response = $this->client->sendQuest("sendroommsg", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'mtype' => $mtype,
             'from' => $from,
             'rid' => $rid,
-            'mid' => $this->genMid(),
+            'mid' => $mid,
             'msg' => $msg,
             'attrs' => $attrs
         ));
+        return [
+            'mtime' => $response['mtime'],
+            'mid' => $mid,
+        ];
     }
 
+    /**
+     * @param $from
+     * @param $mtype
+     * @param $msg
+     * @param $attrs
+     * @return array
+     * @throws \Exception
+     */
     public function broadcastMessage($from, $mtype, $msg, $attrs)
     {
-        $salt = $this->genSalt();
-        $this->client->sendQuest("broadcastmsg", array(
+        $salt = $this->generateSalt();
+        $mid = $this->generateMessageId();
+        $response = $this->client->sendQuest("broadcastmsg", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'mtype' => $mtype,
             'from' => $from,
-            'mid' => $this->genMid(),
+            'mid' => $mid,
             'msg' => $msg,
             'attrs' => $attrs
         ));
+        return [
+            'mtime' => $response['mtime'],
+            'mid' => $mid,
+        ];
     }
 
     public function addfriends($uid, $friends)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $this->client->sendQuest("addfriends", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'uid' => $uid,
             'friends' => $friends
@@ -139,10 +200,10 @@ class RTMServerClient
 
     public function delFriends($uid, $friends)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $this->client->sendQuest("delfriends", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'uid' => $uid,
             'friends' => $friends
@@ -151,10 +212,10 @@ class RTMServerClient
 
     public function getFriends($uid)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $res = $this->client->sendQuest("getfriends", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'uid' => $uid
         ));
@@ -163,10 +224,10 @@ class RTMServerClient
 
     public function isFriend($uid, $fuid)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $res = $this->client->sendQuest("isfriend", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'uid' => $uid,
             'fuid' => $fuid
@@ -176,10 +237,10 @@ class RTMServerClient
 
     public function isFriends($uid, $fuids)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $res = $this->client->sendQuest("isfriends", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'uid' => $uid,
             'fuids' => $fuids
@@ -189,10 +250,10 @@ class RTMServerClient
 
     public function addGroupMembers($gid, $uids)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $this->client->sendQuest("addgroupmembers", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'gid' => $gid,
             'uids' => $uids
@@ -201,10 +262,10 @@ class RTMServerClient
 
     public function deleteGroupMembers($gid, $uids)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $this->client->sendQuest("delgroupmembers", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'gid' => $gid,
             'uids' => $uids
@@ -213,10 +274,10 @@ class RTMServerClient
 
     public function deleteGroup($gid)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $this->client->sendQuest("delgroup", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'gid' => $gid
         ));
@@ -224,10 +285,10 @@ class RTMServerClient
 
     public function getGroupMembers($gid)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $res = $this->client->sendQuest("getgroupmembers", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'gid' => $gid
         ));
@@ -236,10 +297,10 @@ class RTMServerClient
 
     public function isGroupMember($gid, $uid)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $res = $this->client->sendQuest("isgroupmember", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'gid' => $gid,
             'uid' => $uid
@@ -249,10 +310,10 @@ class RTMServerClient
 
     public function getUserGroups($uid)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $res = $this->client->sendQuest("getusergroups", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'uid' => $uid
         ));
@@ -261,10 +322,10 @@ class RTMServerClient
 
     public function getToken($uid)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $res = $this->client->sendQuest("gettoken", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'uid' => $uid
         ));
@@ -273,10 +334,10 @@ class RTMServerClient
 
     public function getOnlineUsers($uids)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $res = $this->client->sendQuest("getonlineusers", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'uids' => $uids
         ));
@@ -285,10 +346,10 @@ class RTMServerClient
 
     public function addGroupBan($gid, $uid, $btime)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $this->client->sendQuest("addgroupban", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'gid' => $gid,
             'uid' => $uid,
@@ -298,10 +359,10 @@ class RTMServerClient
 
     public function removeGroupBan($gid, $uid)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $this->client->sendQuest("removegroupban", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'gid' => $gid,
             'uid' => $uid
@@ -310,10 +371,10 @@ class RTMServerClient
 
     public function addRoomBan($rid, $uid, $btime)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $this->client->sendQuest("addroomban", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'rid' => $rid,
             'uid' => $uid,
@@ -323,10 +384,10 @@ class RTMServerClient
 
     public function removeRoomBan($rid, $uid)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $this->client->sendQuest("removeroomban", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'rid' => $rid,
             'uid' => $uid
@@ -335,10 +396,10 @@ class RTMServerClient
 
     public function addProjectBlack($uid, $btime)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $this->client->sendQuest("addprojectblack", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'uid' => $uid,
             'btime' => $btime
@@ -347,10 +408,10 @@ class RTMServerClient
 
     public function removeProjectBlack($uid)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $this->client->sendQuest("removeprojectblack", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'uid' => $uid
         ));
@@ -358,10 +419,10 @@ class RTMServerClient
 
     public function isBanOfGroup($gid, $uid)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $res = $this->client->sendQuest("isbanofgroup", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'gid' => $gid,
             'uid' => $uid
@@ -371,10 +432,10 @@ class RTMServerClient
 
     public function isBanOfRoom($rid, $uid)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $res = $this->client->sendQuest("isbanofroom", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'rid' => $rid,
             'uid' => $uid
@@ -384,10 +445,10 @@ class RTMServerClient
 
     public function isProjectBlack($uid)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $res = $this->client->sendQuest("isprojectblack", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'uid' => $uid
         ));
@@ -396,10 +457,10 @@ class RTMServerClient
 
     public function setPushName($uid, $pushname)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $this->client->sendQuest("setpushname", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'uid' => $uid,
             'pushname' => $pushname
@@ -408,55 +469,20 @@ class RTMServerClient
 
     public function getPushName($uid)
     {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         $res = $this->client->sendQuest("getpushname", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'uid' => $uid
         ));
         return isset($res['pushname']) ? $res['pushname'] : '';
     }
 
-    public function setGeo($uid, $lat, $lng)
-    {
-        $salt = $this->genSalt();
-        $this->client->sendQuest("setgeo", array(
-            'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
-            'salt' => $salt,
-            'uid' => $uid,
-            'lat' => $lat,
-            'lng' => $lng
-        ));
-    }
-
-    public function getGeo($uid)
-    {
-        $salt = $this->genSalt();
-        return $this->client->sendQuest("getgeo", array(
-            'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
-            'salt' => $salt,
-            'uid' => $uid
-        ));
-    }
-
-    public function getGeos($uids)
-    {
-        $salt = $this->genSalt();
-        return $this->client->sendQuest("getgeos", array(
-            'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
-            'salt' => $salt,
-            'uids' => $uids
-        ));
-    }
-
     public function sendFile($from, $to, $mtype, $file)
     {
-        $salt = $this->genSalt();
-        $sign = $this->genSign($salt);
+        $salt = $this->generateSalt();
+        $sign = $this->generateSignature($salt);
         $answer = $this->client->sendQuest('filetoken', [
             'pid' => $this->pid,
             'sign' => $sign,
@@ -480,7 +506,7 @@ class RTMServerClient
             'mtype' => $mtype,
             'from' => $from,
             'to' => $to,
-            'mid' => $this->genMid(),
+            'mid' => $this->generateMessageId(),
             'file' => $content,
             'attrs' => json_encode([
                 'sign' => $sign,
@@ -489,70 +515,108 @@ class RTMServerClient
         ]);
     }
 
-    public function getGroupMessage($gid, $num, $desc, $page, $localid = 0, $mtypes = array())
+    /**
+     * @param $uid
+     * @param $ouid
+     * @param $num
+     * @param $desc
+     * @param int $begin
+     * @param int $end
+     * @param int $lastid
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getP2PMessage($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)
     {
-        $salt = $this->genSalt();
-        return $this->client->sendQuest("getgroupmsg", array(
-            'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
-            'salt' => $salt,
-            'gid' => $gid,
-            'num' => $num,
-            'desc' => $desc,
-            'page' => $page,
-            'localid' => $localid,
-            'mtypes' => $mtypes,
-        ));
-    }
-
-    public function getRoomMessage($rid, $num, $desc, $page, $localid = 0, $mtypes = array())
-    {
-        $salt = $this->genSalt();
-        return $this->client->sendQuest("getroommsg", array(
-            'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
-            'salt' => $salt,
-            'rid' => $rid,
-            'num' => $num,
-            'desc' => $desc,
-            'page' => $page,
-            'localid' => $localid,
-            'mtypes' => $mtypes,
-        ));
-    }
-
-    public function getBroadcastMessage($num, $desc, $page, $localid = 0, $mtypes = array())
-    {
-        $salt = $this->genSalt();
-        return $this->client->sendQuest("getbroadcastmsg", array(
-            'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
-            'salt' => $salt,
-            'num' => $num,
-            'desc' => $desc,
-            'page' => $page,
-            'localid' => $localid,
-            'mtypes' => $mtypes,
-        ));
-    }
-
-    public function getP2PMessage($uid, $ouid, $num, $direction, $desc, $page, $localid = 0, $mtypes = array())
-    {
-        $salt = $this->genSalt();
+        $salt = $this->generateSalt();
         return $this->client->sendQuest("getp2pmsg", array(
             'pid' => $this->pid,
-            'sign' => $this->genSign($salt),
+            'sign' => $this->generateSignature($salt),
             'salt' => $salt,
             'uid' => $uid,
             'ouid' => $ouid,
             'num' => $num,
-            'direction' => $direction,
             'desc' => $desc,
-            'page' => $page,
-            'localid' => $localid,
-            'mtypes' => $mtypes,
+            'begin' => $begin,
+            'end' => $end,
+            'lastid' => $lastid,
+        ));
+    }
+
+    /**
+     * @param $gid
+     * @param $num
+     * @param $desc
+     * @param int $begin
+     * @param int $end
+     * @param int $lastid
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getGroupMessage($gid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)
+    {
+        $salt = $this->generateSalt();
+        return $this->client->sendQuest("getgroupmsg", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'gid' => $gid,
+            'num' => $num,
+            'desc' => $desc,
+            'begin' => $begin,
+            'end' => $end,
+            'lastid' => $lastid,
+        ));
+    }
+
+    /**
+     * @param $rid
+     * @param $num
+     * @param $desc
+     * @param int $begin
+     * @param int $end
+     * @param int $lastid
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getRoomMessage($rid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)
+    {
+        $salt = $this->generateSalt();
+        return $this->client->sendQuest("getroommsg", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'rid' => $rid,
+            'num' => $num,
+            'desc' => $desc,
+            'begin' => $begin,
+            'end' => $end,
+            'lastid' => $lastid,
+        ));
+    }
+
+    /**
+     * @param $num
+     * @param $desc
+     * @param int $begin
+     * @param int $end
+     * @param int $lastid
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getBroadcastMessage($num, $desc, $begin = 0, $end = 0, $lastid = 0)
+    {
+        $salt = $this->generateSalt();
+        return $this->client->sendQuest("getbroadcastmsg", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'num' => $num,
+            'desc' => $desc,
+            'begin' => $begin,
+            'end' => $end,
+            'lastid' => $lastid,
         ));
     }
 
 }
-
