@@ -516,10 +516,10 @@ class RTMServerClient
     }
 
     /**
-     * @param $uid
-     * @param $ouid
-     * @param $num
-     * @param $desc
+     * @param int $uid
+     * @param int $ouid
+     * @param int $num
+     * @param int $desc
      * @param int $begin
      * @param int $end
      * @param int $lastid
@@ -544,9 +544,9 @@ class RTMServerClient
     }
 
     /**
-     * @param $gid
-     * @param $num
-     * @param $desc
+     * @param int $gid
+     * @param int $num
+     * @param int $desc
      * @param int $begin
      * @param int $end
      * @param int $lastid
@@ -570,9 +570,9 @@ class RTMServerClient
     }
 
     /**
-     * @param $rid
-     * @param $num
-     * @param $desc
+     * @param int $rid
+     * @param int $num
+     * @param int $desc
      * @param int $begin
      * @param int $end
      * @param int $lastid
@@ -596,8 +596,8 @@ class RTMServerClient
     }
 
     /**
-     * @param $num
-     * @param $desc
+     * @param int $num
+     * @param int $desc
      * @param int $begin
      * @param int $end
      * @param int $lastid
@@ -619,4 +619,41 @@ class RTMServerClient
         ));
     }
 
+    /**
+     * @param integer $mid
+     * @param integer $from
+     * @param integer $xid
+     * @param integer $type
+     * @throws \Exception
+     */
+    public function deleteMessage($mid, $from, $xid, $type)
+    {
+        $salt = $this->generateSalt();
+        $this->client->sendQuest('delmsg', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'mid' => (int)$mid,
+            'from' => (int)$from,
+            'xid' => (int)$xid,
+            'type' => (int)$type
+        ]);
+    }
+
+    /**
+     * @param integer $uid
+     * @param null|string $ce client endpoint
+     * @throws \Exception
+     */
+    public function kickOut($uid, $ce = null)
+    {
+        $salt = $this->generateSalt();
+        $this->client->sendQuest('kickout', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'uid' => (int)$uid,
+            'ce' => $ce
+        ]);
+    }
 }
