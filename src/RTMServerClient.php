@@ -33,12 +33,12 @@ class RTMServerClient
 
     private function generateMessageId()
     {
-        return (int)((int)(microtime(true) * 1000) . mt_rand(10000, 99999));
+        return (int)((int)(microtime(true) * 1000) . mt_rand(10, 99));
     }
 
     private function generateSalt()
     {
-        return (int)(microtime(true) * 1000);
+        return (int)((int)(microtime(true) * 1000) . mt_rand(10000, 99999));
     }
 
     private function generateSignature($salt)
