@@ -38,7 +38,19 @@ class RTMServerClient
 
     private function generateSalt()
     {
-        return (int)((int)(microtime(true) * 1000) . mt_rand(10000, 99999));
+        $time = sprintf('%.06f', microtime(true));
+
+        $time = substr($time, 7);
+        $time = str_replace('.', '', $time);
+
+        $pid = getmypid() % 92000;
+
+        $rand = mt_rand(0, 99999);
+
+        $s = sprintf('%05d%09d%05d', $pid, $time, $rand);
+        $i = intval($s);
+
+        return $i;
     }
 
     private function generateSignature($salt)
