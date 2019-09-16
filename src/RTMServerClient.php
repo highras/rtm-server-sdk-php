@@ -4,6 +4,8 @@ namespace highras\rtm;
 
 use highras\fpnn\TCPClient;
 
+define("RTM_CHAT_MTYPE", 30);
+
 class RTMServerClient
 {
     private $client = null;
@@ -38,19 +40,7 @@ class RTMServerClient
 
     private function generateSalt()
     {
-        $time = sprintf('%.06f', microtime(true));
-
-        $time = substr($time, 7);
-        $time = str_replace('.', '', $time);
-
-        $pid = getmypid() % 92000;
-
-        $rand = mt_rand(0, 99999);
-
-        $s = sprintf('%05d%09d%05d', $pid, $time, $rand);
-        $i = intval($s);
-
-        return $i;
+        return (int)((int)(microtime(true) * 1000) . mt_rand(10000, 99999));
     }
 
     private function generateSignature($salt)
@@ -195,6 +185,91 @@ class RTMServerClient
         return [
             'mtime' => $response['mtime'],
             'mid' => $mid,
+        ];
+    }
+    
+    public function sendChat($from, $to, $msg, $attrs)
+    {
+        return sendMessage($from, $to, RTM_CHAT_MTYPE, $msg, $attrs); 
+    }
+    
+    public function sendChats($from, $tos, $msg, $attrs)
+    {
+        return sendMessages($from, $tos, RTM_CHAT_MTYPE, $msg, $attrs); 
+    }
+    
+    public function sendGroupChat($from, $gid, $msg, $attrs)
+    {
+        return sendGroupMessage($from, $gid, RTM_CHAT_MTYPE, $msg, $attrs); 
+    }
+    
+    public function sendRoomChat($from, $rid, $msg, $attrs)
+    {
+        return sendRoomMessage($from, $rid, RTM_CHAT_MTYPE, $msg, $attrs); 
+    }
+    
+    public function broadcastChat($from, $msg, $attrs)
+    {
+        return broadcastMessage($from, RTM_CHAT_MTYPE, $msg, $attrs); 
+    }
+    
+    public function getP2PChat($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)
+    {
+        return getP2PMessage($uid, $ouid, $num, $desc, $begin, $end, $lastid, array(RTM_CHAT_MTYPE));
+    }
+
+    public function getGroupChat($gid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)
+    {
+        return getGroupMessage($gid, $num, $desc, $begin, $end, $lastid, array(RTM_CHAT_MTYPE));
+    }
+
+    public function getRoomChat($rid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)
+    {
+        return getRoomMessage($rid, $num, $desc, $begin, $end, $lastid, array(RTM_CHAT_MTYPE));
+    }
+
+    public function getBroadcastChat($num, $desc, $begin = 0, $end = 0, $lastid = 0)
+    {
+        return getBroadcastMessage($num, $desc, $begin, $end, $lastid, array(RTM_CHAT_MTYPE)); 
+    }
+
+    public function deleteChat($mid, $from, $xid, $type) {
+        return deleteMessage($mid, $from, $xid, $type);
+    }
+
+    public function translate($text, $dst, $src = '', $type = 'chat', $profanity = '') {
+        $salt = $this->generateSalt();
+        $mid = $this->generateMessageId();
+        $response = $this->client->sendQuest("translate", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'text' => $text,
+            'src' => $src,
+            'dst' => $dst,
+            'type' => $type,
+            'profanity' => $profanity
+        ));
+        return [
+            'source' => $response['source'],
+            'target' => $response['target'],
+            'sourceText' => $response['sourceText'],
+            'targetText' => $response['targetText']
+        ];
+    }
+
+    public function profanity($text, $action = '') {
+        $salt = $this->generateSalt();
+        $mid = $this->generateMessageId();
+        $response = $this->client->sendQuest("profanity", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'text' => $text,
+            'action' => $action
+        ));
+        return [
+            'text' => $response['text']
         ];
     }
 
@@ -466,29 +541,29 @@ class RTMServerClient
         ));
         return isset($res['ok']) && ($res['ok'] == true);
     }
-
-    public function setPushName($uid, $pushname)
+    
+    public function addRoomMember($pid, $rid, $uid)
     {
         $salt = $this->generateSalt();
-        $this->client->sendQuest("setpushname", array(
+        $this->client->sendQuest("addroommember", array(
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt),
             'salt' => $salt,
-            'uid' => $uid,
-            'pushname' => $pushname
+            'rid' => $rid,
+            'uid' => $uid
         ));
     }
 
-    public function getPushName($uid)
+    public function deleteRoomMember($pid, $rid, $uid)
     {
         $salt = $this->generateSalt();
-        $res = $this->client->sendQuest("getpushname", array(
+        $this->client->sendQuest("delroommember", array(
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt),
             'salt' => $salt,
+            'rid' => $rid,
             'uid' => $uid
         ));
-        return isset($res['pushname']) ? $res['pushname'] : '';
     }
 
     public function sendFile($from, $to, $mtype, $file)
@@ -538,7 +613,7 @@ class RTMServerClient
      * @return mixed
      * @throws \Exception
      */
-    public function getP2PMessage($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)
+    public function getP2PMessage($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())
     {
         $salt = $this->generateSalt();
         return $this->client->sendQuest("getp2pmsg", array(
@@ -552,6 +627,7 @@ class RTMServerClient
             'begin' => $begin,
             'end' => $end,
             'lastid' => $lastid,
+            'mtypes' => $mtypes
         ));
     }
 
@@ -565,7 +641,7 @@ class RTMServerClient
      * @return mixed
      * @throws \Exception
      */
-    public function getGroupMessage($gid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)
+    public function getGroupMessage($gid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())
     {
         $salt = $this->generateSalt();
         return $this->client->sendQuest("getgroupmsg", array(
@@ -578,6 +654,7 @@ class RTMServerClient
             'begin' => $begin,
             'end' => $end,
             'lastid' => $lastid,
+            'mtypes' => $mtypes
         ));
     }
 
@@ -591,7 +668,7 @@ class RTMServerClient
      * @return mixed
      * @throws \Exception
      */
-    public function getRoomMessage($rid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)
+    public function getRoomMessage($rid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())
     {
         $salt = $this->generateSalt();
         return $this->client->sendQuest("getroommsg", array(
@@ -604,6 +681,7 @@ class RTMServerClient
             'begin' => $begin,
             'end' => $end,
             'lastid' => $lastid,
+            'mtypes' => $mtypes
         ));
     }
 
@@ -616,7 +694,7 @@ class RTMServerClient
      * @return mixed
      * @throws \Exception
      */
-    public function getBroadcastMessage($num, $desc, $begin = 0, $end = 0, $lastid = 0)
+    public function getBroadcastMessage($num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())
     {
         $salt = $this->generateSalt();
         return $this->client->sendQuest("getbroadcastmsg", array(
@@ -628,6 +706,7 @@ class RTMServerClient
             'begin' => $begin,
             'end' => $end,
             'lastid' => $lastid,
+            'mtypes' => $mtypes
         ));
     }
 
