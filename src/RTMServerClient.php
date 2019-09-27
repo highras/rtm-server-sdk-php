@@ -747,4 +747,41 @@ class RTMServerClient
             'ce' => $ce
         ]);
     }
+
+	public function dbGet($uid, $key)
+    {
+        $salt = $this->generateSalt();
+        return $this->client->sendQuest('dbget', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'uid' => (int)$uid,
+            'key' => $key
+        ]);
+    }
+
+    public function dbGets($uid, $keys)
+    {
+        $salt = $this->generateSalt();
+        return $this->client->sendQuest('dbgets', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'uid' => (int)$uid,
+            'keys' => $keys
+        ]);
+    }
+
+    public function dbSet($uid, $key, $value)
+    {
+        $salt = $this->generateSalt();
+        return $this->client->sendQuest('dbset', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'uid' => (int)$uid,
+            'key' => $key,
+            'val' => $value
+        ]);
+    }
 }
