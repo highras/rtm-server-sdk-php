@@ -517,6 +517,31 @@ class RTMServerClient
         return isset($res['ok']) && ($res['ok'] == true);
     }
 
+	public function setGroupInfo($gid, $oinfo = '', $pinfo = '')
+    {
+        $salt = $this->generateSalt();
+        $res = $this->client->sendQuest("setgroupinfo", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'gid' => $gid,
+            'oinfo' => $oinfo,
+			'pinfo' => $pinfo
+        ));
+    }
+
+	public function getGroupInfo($gid) 
+	{
+		$salt = $this->generateSalt();
+        $res = $this->client->sendQuest("getgroupinfo", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'gid' => $gid
+        ));
+		return array('oinfo' => $res['oinfo'], 'pinfo' => $res['pinfo']);
+	}
+
     public function isBanOfRoom($rid, $uid)
     {
         $salt = $this->generateSalt();
@@ -530,6 +555,31 @@ class RTMServerClient
         return isset($res['ok']) && ($res['ok'] == true);
     }
 
+	public function setRoomInfo($rid, $oinfo = '', $pinfo = '')
+    {
+        $salt = $this->generateSalt();
+        $res = $this->client->sendQuest("setroominfo", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'rid' => $rid,
+            'oinfo' => $oinfo,
+			'pinfo' => $pinfo
+        ));
+    }
+
+	public function getRoomInfo($rid) 
+	{
+		$salt = $this->generateSalt();
+        $res = $this->client->sendQuest("getroominfo", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'rid' => $rid
+        ));
+		return array('oinfo' => $res['oinfo'], 'pinfo' => $res['pinfo']);
+	}
+
     public function isProjectBlack($uid)
     {
         $salt = $this->generateSalt();
@@ -541,6 +591,43 @@ class RTMServerClient
         ));
         return isset($res['ok']) && ($res['ok'] == true);
     }
+
+    public function setUserInfo($uid, $oinfo = '', $pinfo = '')
+    {
+        $salt = $this->generateSalt();
+        $res = $this->client->sendQuest("setuserinfo", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'uid' => $uid,
+            'oinfo' => $oinfo,
+			'pinfo' => $pinfo
+        ));
+    }
+
+	public function getUserInfo($uid) 
+	{
+		$salt = $this->generateSalt();
+        $res = $this->client->sendQuest("getuserinfo", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'uid' => $uid
+        ));
+		return array('oinfo' => $res['oinfo'], 'pinfo' => $res['pinfo']);
+	}
+
+	public function getUserOpenInfo($uids) 
+	{
+		$salt = $this->generateSalt();
+        $res = $this->client->sendQuest("getuseropeninfo", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'uids' => $uids
+        ));
+		return $res['info'];
+	}
     
     public function addRoomMember($pid, $rid, $uid)
     {
@@ -748,7 +835,7 @@ class RTMServerClient
         ]);
     }
 
-	public function dbGet($uid, $key)
+    public function dbGet($uid, $key) 
     {
         $salt = $this->generateSalt();
         return $this->client->sendQuest('dbget', [
@@ -771,7 +858,7 @@ class RTMServerClient
             'keys' => $keys
         ]);
     }
-
+    
     public function dbSet($uid, $key, $value)
     {
         $salt = $this->generateSalt();
@@ -784,4 +871,5 @@ class RTMServerClient
             'val' => $value
         ]);
     }
+
 }
