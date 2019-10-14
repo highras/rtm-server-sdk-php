@@ -273,7 +273,7 @@ class RTMServerClient
         ];
     }
 
-    public function addfriends($uid, $friends)
+    public function addFriends($uid, $friends)
     {
         $salt = $this->generateSalt();
         $this->client->sendQuest("addfriends", array(
