@@ -835,6 +835,42 @@ class RTMServerClient
         ]);
     }
 
+    public function addDevice($uid, $appType, $deviceToken)
+    {
+        $salt = $this->generateSalt();
+        $this->client->sendQuest('adddevice', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'uid' => (int)$uid,
+            'apptype' => $appType,
+            'adddevice' => $deviceToken
+        ]);
+    }
+    
+    public function removeDevice($uid, $deviceToken)
+    {
+        $salt = $this->generateSalt();
+        $this->client->sendQuest('removedevice', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'uid' => (int)$uid,
+            'adddevice' => $deviceToken
+        ]);
+    }
+    
+    public function removeToken($uid)
+    {
+        $salt = $this->generateSalt();
+        $this->client->sendQuest('removetoken', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'uid' => (int)$uid
+        ]);
+    }
+
     public function dbGet($uid, $key) 
     {
         $salt = $this->generateSalt();
