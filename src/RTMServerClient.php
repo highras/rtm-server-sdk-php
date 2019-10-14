@@ -629,7 +629,7 @@ class RTMServerClient
 		return $res['info'];
 	}
     
-    public function addRoomMember($pid, $rid, $uid)
+    public function addRoomMember($rid, $uid)
     {
         $salt = $this->generateSalt();
         $this->client->sendQuest("addroommember", array(
@@ -641,7 +641,7 @@ class RTMServerClient
         ));
     }
 
-    public function deleteRoomMember($pid, $rid, $uid)
+    public function deleteRoomMember($rid, $uid)
     {
         $salt = $this->generateSalt();
         $this->client->sendQuest("delroommember", array(
