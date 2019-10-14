@@ -871,10 +871,10 @@ class RTMServerClient
         ]);
     }
 
-    public function dbGet($uid, $key) 
+  	public function dataGet($uid, $key)
     {
         $salt = $this->generateSalt();
-        return $this->client->sendQuest('dbget', [
+        return $this->client->sendQuest('dataget', [
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt),
             'salt' => $salt,
@@ -883,22 +883,10 @@ class RTMServerClient
         ]);
     }
 
-    public function dbGets($uid, $keys)
+    public function dataSet($uid, $key, $value)
     {
         $salt = $this->generateSalt();
-        return $this->client->sendQuest('dbgets', [
-            'pid' => $this->pid,
-            'sign' => $this->generateSignature($salt),
-            'salt' => $salt,
-            'uid' => (int)$uid,
-            'keys' => $keys
-        ]);
-    }
-    
-    public function dbSet($uid, $key, $value)
-    {
-        $salt = $this->generateSalt();
-        return $this->client->sendQuest('dbset', [
+        return $this->client->sendQuest('dataset', [
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt),
             'salt' => $salt,
@@ -907,5 +895,17 @@ class RTMServerClient
             'val' => $value
         ]);
     }
+
+    public function dataDelete($uid, $key)
+    {
+        $salt = $this->generateSalt();
+        return $this->client->sendQuest('datadel', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt),
+            'salt' => $salt,
+            'uid' => (int)$uid,
+            'key' => $key
+        ]);
+    } 
 
 }
