@@ -98,7 +98,7 @@ to the ```require``` section of your `composer.json` file.
 * `sendChat($from, $to, $msg, $attrs)`: 发送聊天
     * `from`: **(long)** 发送方 id
     * `to`: **(long)** 接收方uid
-    * `msg`: **(string)** 消息内容
+    * `msg`: **(string)** 消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
     * `attrs`: **(string)** 消息附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
@@ -107,7 +107,7 @@ to the ```require``` section of your `composer.json` file.
 * `sendChats($from, $tos, $msg, $attrs)`: 发送多人聊天
     * `from`: **(long)** 发送方 id
     * `tos`: **(long)** 接收方uids
-    * `msg`: **(string)** 消息内容
+    * `msg`: **(string)** 消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
     * `attrs`: **(string)** 消息附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
@@ -116,7 +116,7 @@ to the ```require``` section of your `composer.json` file.
 * `sendGroupChat($from, $gid, $msg, $attrs)`: 发送组聊天
     * `from`: **(long)** 发送方 id
     * `gid`: **(long)** group id
-    * `msg`: **(string)** 消息内容
+    * `msg`: **(string)** 消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
     * `attrs`: **(string)** 消息附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
@@ -125,7 +125,7 @@ to the ```require``` section of your `composer.json` file.
 * `sendRoomChat($from, $rid, $msg, $attrs)`: 发送房间聊天
     * `from`: **(long)** 发送方 id
     * `rid`: **(long)** room id
-    * `msg`: **(string)** 消息内容
+    * `msg`: **(string)** 消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
     * `attrs`: **(string)** 消息附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
@@ -133,7 +133,7 @@ to the ```require``` section of your `composer.json` file.
       
  * `broadcastChat($from, $msg, $attrs)`: 广播聊天
     * `from`: **(long)** admin id
-    * `msg`: **(string)** 消息内容
+    * `msg`: **(string)** 消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
     * `attrs`: **(string)** 消息附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
