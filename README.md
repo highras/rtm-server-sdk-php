@@ -49,7 +49,7 @@ to the ```require``` section of your `composer.json` file.
 * `sendMessage($from, $to, $mtype, $msg, $attrs)`: 发送P2P消息
     * `from`: **(long)** 发送方 id
     * `to`: **(long)** 接收方uid
-    * `mtype`: **(byte)** 消息类型
+    * `mtype`: **(byte)** 消息类型（请使用51-127，禁止使用50及以下的值）
     * `msg`: **(string)** 消息内容
     * `attrs`: **(string)** 消息附加信息, 没有可传`""`
     * 返回：
@@ -59,7 +59,7 @@ to the ```require``` section of your `composer.json` file.
 * `sendMessages($from, $tos, $mtype, $msg, $attrs)`: 发送多人消息
     * `from`: **(long)** 发送方 id
     * `tos`: **(long[])** 接收方uids
-    * `mtype`: **(byte)** 消息类型
+    * `mtype`: **(byte)** 消息类型（请使用51-127，禁止使用50及以下的值）
     * `msg`: **(string)** 消息内容
     * `attrs`: **(string)** 消息附加信息, 没有可传`""`
     * 返回：
@@ -69,7 +69,7 @@ to the ```require``` section of your `composer.json` file.
 * `sendGroupMessage($from, $gid, $mtype, $msg, $attrs)`: 发送组消息
     * `from`: **(long)** 发送方 id
     * `gid`: **(long)** group id
-    * `mtype`: **(byte)** 消息类型
+    * `mtype`: **(byte)** 消息类型（请使用51-127，禁止使用50及以下的值）
     * `msg`: **(string)** 消息内容
     * `attrs`: **(string)** 消息附加信息, 可传`""`
     * 返回：
@@ -79,7 +79,7 @@ to the ```require``` section of your `composer.json` file.
 * `sendRoomMessage($from, $rid, $mtype, $msg, $attrs)`: 发送房间消息
     * `from`: **(long)** 发送方 id
     * `rid`: **(long)** room id
-    * `mtype`: **(byte)** 消息类型
+    * `mtype`: **(byte)** 消息类型（请使用51-127，禁止使用50及以下的值）
     * `msg`: **(string)** 消息内容
     * `attrs`: **(string)** 消息附加信息, 可传`""`
     * 返回：
@@ -88,7 +88,7 @@ to the ```require``` section of your `composer.json` file.
       
 * `broadcastMessage($from, $mtype, $msg, $attrs)`: 广播消息
     * `from`: **(long)** admin id
-    * `mtype`: **(byte)** 消息类型
+    * `mtype`: **(byte)** 消息类型（请使用51-127，禁止使用50及以下的值）
     * `msg`: **(string)** 消息内容
     * `attrs`: **(string)** 消息附加信息, 可传`""`
     * 返回：
