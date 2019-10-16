@@ -46,107 +46,107 @@ to the ```require``` section of your `composer.json` file.
 * `enableEncryptorByFile($file)`: 启用加密链接
     * `file`: **(string)**  证书文件路径
     
-* `sendMessage($from, $to, $mtype, $msg, $attrs)`: 发送P2P消息
+* `sendMessage($from, $to, $mtype, $msg, $attrs)`: 发送P2P业务消息
     * `from`: **(long)** 发送方 id
     * `to`: **(long)** 接收方uid
-    * `mtype`: **(byte)** 消息类型（请使用51-127，禁止使用50及以下的值）
-    * `msg`: **(string)** 消息内容
-    * `attrs`: **(string)** 消息附加信息, 没有可传`""`
+    * `mtype`: **(byte)** 业务消息类型（请使用51-127，禁止使用50及以下的值）
+    * `msg`: **(string)** 业务消息内容
+    * `attrs`: **(string)** 业务消息附加信息, 没有可传`""`
     * 返回：
       * `mtime`: 响应时间戳
-      * `mid` : 消息id
+      * `mid` : 业务消息id
       
-* `sendMessages($from, $tos, $mtype, $msg, $attrs)`: 发送多人消息
+* `sendMessages($from, $tos, $mtype, $msg, $attrs)`: 发送多人业务消息
     * `from`: **(long)** 发送方 id
     * `tos`: **(long[])** 接收方uids
-    * `mtype`: **(byte)** 消息类型（请使用51-127，禁止使用50及以下的值）
-    * `msg`: **(string)** 消息内容
-    * `attrs`: **(string)** 消息附加信息, 没有可传`""`
+    * `mtype`: **(byte)** 业务消息类型（请使用51-127，禁止使用50及以下的值）
+    * `msg`: **(string)** 业务消息内容
+    * `attrs`: **(string)** 业务消息附加信息, 没有可传`""`
     * 返回：
       * `mtime`: 响应时间戳
-      * `mid` : 消息id  
+      * `mid` : 业务消息id  
       
-* `sendGroupMessage($from, $gid, $mtype, $msg, $attrs)`: 发送组消息
+* `sendGroupMessage($from, $gid, $mtype, $msg, $attrs)`: 发送组消业务息
     * `from`: **(long)** 发送方 id
     * `gid`: **(long)** group id
-    * `mtype`: **(byte)** 消息类型（请使用51-127，禁止使用50及以下的值）
-    * `msg`: **(string)** 消息内容
-    * `attrs`: **(string)** 消息附加信息, 可传`""`
+    * `mtype`: **(byte)** 业务消息类型（请使用51-127，禁止使用50及以下的值）
+    * `msg`: **(string)** 业务消息内容
+    * `attrs`: **(string)** 业务消息附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
-      * `mid` : 消息id  
+      * `mid` : 业务消息id  
 
-* `sendRoomMessage($from, $rid, $mtype, $msg, $attrs)`: 发送房间消息
+* `sendRoomMessage($from, $rid, $mtype, $msg, $attrs)`: 发送房间业务消息
     * `from`: **(long)** 发送方 id
     * `rid`: **(long)** room id
-    * `mtype`: **(byte)** 消息类型（请使用51-127，禁止使用50及以下的值）
-    * `msg`: **(string)** 消息内容
-    * `attrs`: **(string)** 消息附加信息, 可传`""`
+    * `mtype`: **(byte)** 业务消息类型（请使用51-127，禁止使用50及以下的值）
+    * `msg`: **(string)** 业务消息内容
+    * `attrs`: **(string)** 业务消息附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
-      * `mid` : 消息id  
+      * `mid` : 业务消息id  
       
-* `broadcastMessage($from, $mtype, $msg, $attrs)`: 广播消息
+* `broadcastMessage($from, $mtype, $msg, $attrs)`: 广播业务消息
     * `from`: **(long)** admin id
-    * `mtype`: **(byte)** 消息类型（请使用51-127，禁止使用50及以下的值）
-    * `msg`: **(string)** 消息内容
-    * `attrs`: **(string)** 消息附加信息, 可传`""`
+    * `mtype`: **(byte)** 业务消息类型（请使用51-127，禁止使用50及以下的值）
+    * `msg`: **(string)** 业务消息内容
+    * `attrs`: **(string)** 业务消息附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
-      * `mid` : 消息id
+      * `mid` : 业务消息id
       
-* `sendChat($from, $to, $msg, $attrs)`: 发送聊天
+* `sendChat($from, $to, $msg, $attrs)`: 发送聊天消息
     * `from`: **(long)** 发送方 id
     * `to`: **(long)** 接收方uid
-    * `msg`: **(string)** 消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
-    * `attrs`: **(string)** 消息附加信息, 可传`""`
+    * `msg`: **(string)** 聊天消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
+    * `attrs`: **(string)** 聊天消息附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
-      * `mid` : 消息id
+      * `mid` : 聊天消息id
 
-* `sendChats($from, $tos, $msg, $attrs)`: 发送多人聊天
+* `sendChats($from, $tos, $msg, $attrs)`: 发送多人聊天消息
     * `from`: **(long)** 发送方 id
     * `tos`: **(long)** 接收方uids
-    * `msg`: **(string)** 消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
-    * `attrs`: **(string)** 消息附加信息, 可传`""`
+    * `msg`: **(string)** 聊天消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
+    * `attrs`: **(string)** 聊天消息附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
-      * `mid` : 消息id
+      * `mid` : 聊天消息id
 
-* `sendGroupChat($from, $gid, $msg, $attrs)`: 发送组聊天
+* `sendGroupChat($from, $gid, $msg, $attrs)`: 发送组聊天消息
     * `from`: **(long)** 发送方 id
     * `gid`: **(long)** group id
-    * `msg`: **(string)** 消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
-    * `attrs`: **(string)** 消息附加信息, 可传`""`
+    * `msg`: **(string)** 聊天消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
+    * `attrs`: **(string)** 聊天消息附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
-      * `mid` : 消息id
+      * `mid` : 聊天消息id
 
-* `sendRoomChat($from, $rid, $msg, $attrs)`: 发送房间聊天
+* `sendRoomChat($from, $rid, $msg, $attrs)`: 发送房间聊天消息
     * `from`: **(long)** 发送方 id
     * `rid`: **(long)** room id
-    * `msg`: **(string)** 消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
-    * `attrs`: **(string)** 消息附加信息, 可传`""`
+    * `msg`: **(string)** 聊天消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
+    * `attrs`: **(string)** 聊天消息附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
-      * `mid` : 消息id
+      * `mid` : 聊天消息id
       
- * `broadcastChat($from, $msg, $attrs)`: 广播聊天
+ * `broadcastChat($from, $msg, $attrs)`: 广播聊天消息
     * `from`: **(long)** admin id
-    * `msg`: **(string)** 消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
-    * `attrs`: **(string)** 消息附加信息, 可传`""`
+    * `msg`: **(string)** 聊天消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
+    * `attrs`: **(string)** 聊天消息附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
-      * `mid` : 消息id
+      * `mid` : 聊天消息id
 
- * `getP2PMessage($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())`: 获取P2P消息历史
-    * `uid`: **(long)** 获取和两个用户之间的历史消息
-    * `ouid`: **(long)** 获取和两个用户之间的历史消息
+ * `getP2PMessage($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())`: 获取P2P业务消息历史
+    * `uid`: **(long)** 获取和两个用户之间的历史业务消息
+    * `ouid`: **(long)** 获取和两个用户之间的历史业务消息
     * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
     * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
     * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
     * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `lastid`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
     * `mtypes`: **([int])** mtype列表`
     * 返回：
       * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<P2PMsg> }`
@@ -157,80 +157,80 @@ to the ```require``` section of your `composer.json` file.
     * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
     * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
     * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `lastid`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
     * `mtypes`: **([int])** mtype列表`
     * 返回：
       * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<GroupMsg> }`
       
- * `getRoomMessage($rid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())`: 获取房间消息历史
+ * `getRoomMessage($rid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())`: 获取房间业务消息历史
     * `rid`: **(long)** 房间id
     * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
     * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
     * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
     * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `lastid`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
     * `mtypes`: **([int])** mtype列表`
     * 返回：
       * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<RoomMsg> }`
       
- * `getBroadcastMessage($num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())`: 获取广播消息历史
+ * `getBroadcastMessage($num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())`: 获取广播业务消息历史
     * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
     * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
     * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
     * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `lastid`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
     * `mtypes`: **([int])** mtype列表`
     * 返回：
       * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<BroadcastMsg> }`
 
  * `getP2PChat($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)`: 获取P2P聊天历史
-    * `uid`: **(long)** 获取和两个用户之间的历史消息
-    * `ouid`: **(long)** 获取和两个用户之间的历史消息
+    * `uid`: **(long)** 获取和两个用户之间的历史聊天消息
+    * `ouid`: **(long)** 获取和两个用户之间的历史聊天消息
     * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
     * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
     * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
     * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `lastid`: **(long)** 最后一条聊天消息的id, 第一次默认传`0`, 条件：`> or <`
     * 返回:
       * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<P2PMsg> }`
       
- * `getGroupChat($gid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)`: 获取组聊天历史
+ * `getGroupChat($gid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)`: 获取组聊天消息历史
     * `gid`: **(long)** 组id
     * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
     * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
     * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
     * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `lastid`: **(long)** 最后一条聊天消息的id, 第一次默认传`0`, 条件：`> or <`
     * 返回：
       * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<GroupMsg> }`
       
- * `getRoomChat($rid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)`: 获取房间聊天历史
+ * `getRoomChat($rid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)`: 获取房间聊天消息历史
     * `rid`: **(long)** 房间id
     * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
     * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
     * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
     * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `lastid`: **(long)** 最后一条聊天消息的id, 第一次默认传`0`, 条件：`> or <`
     * 返回：
       * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<RoomMsg> }`
       
- * `getBroadcastChat($num, $desc, $begin = 0, $end = 0, $lastid = 0)`: 获取广播聊天历史
+ * `getBroadcastChat($num, $desc, $begin = 0, $end = 0, $lastid = 0)`: 获取广播聊天消息历史
     * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
     * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
     * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
     * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `lastid`: **(long)** 最后一条聊天消息的id, 第一次默认传`0`, 条件：`> or <`
     * 返回：
       * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<BroadcastMsg> }`
       
- * `deleteMessage($mid, $from, $xid, $type)`: 删除消息历史
-    * `mid`: **(long)**: 消息id
+ * `deleteMessage($mid, $from, $xid, $type)`: 删除业务消息历史
+    * `mid`: **(long)**: 业务消息id
     * `from`: **(long)** 发布者id
     * `xid`: **(long)** rid/gid/to id
     * `type`: **(int)** 1,p2p; 2,group; 3, room; 4, broadcast  
       
-* `deleteChat($mid, $from, $xid, $type)`: 删除聊天历史
-    * `mid`: **(long)**: 消息id
+* `deleteChat($mid, $from, $xid, $type)`: 删除聊天消息历史
+    * `mid`: **(long)**: 聊天消息id
     * `from`: **(long)** 发布者id
     * `xid`: **(long)** rid/gid/to id
     * `type`: **(int)** 1,p2p; 2,group; 3, room; 4, broadcast      
@@ -242,16 +242,16 @@ to the ```require``` section of your `composer.json` file.
     * `type`: **(string)** 可选值为chat或mail。如未指定，则默认使用'chat'
     * `profanity`: **(string)** 敏感语过滤。设置为以下3项之一: off, stop, censor
     * 返回：
-      * sourceText: 原始消息
-      * source：原始消息语言类型（经过翻译系统检测的）
-      * targetText：翻译后的消息
+      * sourceText: 原始聊天消息
+      * source：原始聊天消息语言类型（经过翻译系统检测的）
+      * targetText：翻译后的聊天消息
       * target：翻译后的语言类型
 
 * `profanity($text, $action = '')`: 敏感词过滤
     * `text`: **(string)**: 内容
     * `action`: **(string)** stop: 返回错误，censor: 用星号(*)替换敏感词
     * 返回：
-      * text: 过滤后的消息
+      * text: 过滤后的聊天消息
       
 * `addFriends($uid, $friends)`: 添加好友
     * `uid`: **(long)** 用户 id
@@ -405,7 +405,7 @@ to the ```require``` section of your `composer.json` file.
 * `sendFile($from, $to, $mtype, $file)`: 发送文件
     * `from`: **(long)** 发送方 id
     * `to`: **(long)** 接收方 id
-    * `mtype`: **(byte)** 消息类型
+    * `mtype`: **(byte)** 业务文件类型
     * `file` : 文件地址
     
 * `kickOut($uid, $ce = null)`: 踢掉用户
