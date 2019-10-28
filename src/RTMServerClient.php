@@ -571,19 +571,22 @@ class RTMServerClient
         return isset($res['ok']) && ($res['ok'] == true);
     }
 
-	public function setGroupInfo($gid, $oinfo = '', $pinfo = '')
+	public function setGroupInfo($gid, $oinfo = NULL, $pinfo = NULL)
     {
         $salt = $this->generateSalt();
         $ts = time();
-        $res = $this->client->sendQuest("setgroupinfo", array(
+        $params = array(
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt, 'setgroupinfo', $ts),
             'salt' => $salt,
             'ts' => $ts,
-            'gid' => $gid,
-            'oinfo' => $oinfo,
-			'pinfo' => $pinfo
-        ));
+            'gid' => $gid
+        );
+        if ($oinfo != NULL)
+            $params['oinfo'] = $oinfo;
+        if ($pinfo != NULL)
+            $params['pinfo'] = $pinfo;
+        $res = $this->client->sendQuest("setgroupinfo", $params);
     }
 
 	public function getGroupInfo($gid) 
@@ -615,19 +618,22 @@ class RTMServerClient
         return isset($res['ok']) && ($res['ok'] == true);
     }
 
-	public function setRoomInfo($rid, $oinfo = '', $pinfo = '')
+	public function setRoomInfo($rid, $oinfo = NULL, $pinfo = NULL)
     {
         $salt = $this->generateSalt();
         $ts = time();
-        $res = $this->client->sendQuest("setroominfo", array(
+        $params = array(
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt, 'setroominfo', $ts),
             'salt' => $salt,
             'ts' => $ts,
             'rid' => $rid,
-            'oinfo' => $oinfo,
-			'pinfo' => $pinfo
-        ));
+        );
+        if ($oinfo != NULL)
+            $params['oinfo'] = $oinfo;
+        if ($pinfo != NULL)
+            $params['pinfo'] = $pinfo;
+        $res = $this->client->sendQuest("setroominfo", $params);
     }
 
 	public function getRoomInfo($rid) 
@@ -658,19 +664,22 @@ class RTMServerClient
         return isset($res['ok']) && ($res['ok'] == true);
     }
 
-    public function setUserInfo($uid, $oinfo = '', $pinfo = '')
+    public function setUserInfo($uid, $oinfo = NULL, $pinfo = NULL)
     {
         $salt = $this->generateSalt();
         $ts = time();
-        $res = $this->client->sendQuest("setuserinfo", array(
+        $params = array(
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt, 'setuserinfo', $ts),
             'salt' => $salt,
             'ts' => $ts,
-            'uid' => $uid,
-            'oinfo' => $oinfo,
-			'pinfo' => $pinfo
-        ));
+            'uid' => $uid
+        );
+        if ($oinfo != NULL)
+            $params['oinfo'] = $oinfo;
+        if ($pinfo != NULL)
+            $params['pinfo'] = $pinfo;
+        $res = $this->client->sendQuest("setuserinfo", $params);
     }
 
 	public function getUserInfo($uid) 

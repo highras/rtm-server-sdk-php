@@ -345,7 +345,7 @@ to the ```require``` section of your `composer.json` file.
     * 返回：
       * bool  
       
-* `setGroupInfo($gid, $oinfo = '', $pinfo = '')`: 设置群组的公开信息或者私有信息
+* `setGroupInfo($gid, $oinfo = NULL, $pinfo = NULL)`: 设置群组的公开信息或者私有信息
     * `gid`: **(long)** 组 id        
     * `oinfo`: **(string)** 公开信息 
     * `pinfo`: **(string)** 私有信息   
@@ -362,7 +362,7 @@ to the ```require``` section of your `composer.json` file.
     * 返回：
       * bool  
  
-* `setRoomInfo($rid, $oinfo = '', $pinfo = '')`: 设置房间的公开信息或者私有信息
+* `setRoomInfo($rid, $oinfo = NULL, $pinfo = NULL)`: 设置房间的公开信息或者私有信息
     * `rid`: **(long)** 房间 id        
     * `oinfo`: **(string)** 公开信息 
     * `pinfo`: **(string)** 私有信息   
@@ -378,7 +378,7 @@ to the ```require``` section of your `composer.json` file.
     * 返回：
       * bool  
  
-* `setUserInfo($uid, $oinfo = '', $pinfo = '')`: 设置用户的公开信息或者私有信息
+* `setUserInfo($uid, $oinfo = NULL, $pinfo = NULL)`: 设置用户的公开信息或者私有信息
     * `uid`: **(long)** 用户 id        
     * `oinfo`: **(string)** 公开信息 
     * `pinfo`: **(string)** 私有信息   
