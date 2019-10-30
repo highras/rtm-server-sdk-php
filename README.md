@@ -120,49 +120,49 @@ to the ```require``` section of your `composer.json` file.
       * `mtime`: 响应时间戳
       * `mid` : 业务消息id
       
-* `getP2PMessage($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())`: 获取P2P业务消息历史
+* `getP2PMessage($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastId = 0, $mtypes = array())`: 获取P2P业务消息历史
     * `uid`: **(long)** 获取和两个用户之间的历史业务消息
     * `ouid`: **(long)** 获取和两个用户之间的历史业务消息
     * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
     * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
     * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
     * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `lastId`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
     * `mtypes`: **([int])** mtype列表`
     * 返回：
-      * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<P2PMsg> }`
+      * `{ num:int16, lastId:int64, begin:int64, end:int64, msgs:list<P2PMsg> }`
 
-* `getGroupMessage($gid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())`: 获取组消息历史
+* `getGroupMessage($gid, $num, $desc, $begin = 0, $end = 0, $lastId = 0, $mtypes = array())`: 获取组消息历史
     * `gid`: **(long)** 组id
     * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
     * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
     * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
     * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `lastId`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
     * `mtypes`: **([int])** mtype列表`
     * 返回：
-      * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<GroupMsg> }`
+      * `{ num:int16, lastId:int64, begin:int64, end:int64, msgs:list<GroupMsg> }`
       
-* `getRoomMessage($rid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())`: 获取房间业务消息历史
+* `getRoomMessage($rid, $num, $desc, $begin = 0, $end = 0, $lastId = 0, $mtypes = array())`: 获取房间业务消息历史
     * `rid`: **(long)** 房间id
     * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
     * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
     * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
     * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `lastId`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
     * `mtypes`: **([int])** mtype列表`
     * 返回：
-      * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<RoomMsg> }`
+      * `{ num:int16, lastId:int64, begin:int64, end:int64, msgs:list<RoomMsg> }`
       
-* `getBroadcastMessage($num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())`: 获取广播业务消息历史
+* `getBroadcastMessage($num, $desc, $begin = 0, $end = 0, $lastId = 0, $mtypes = array())`: 获取广播业务消息历史
     * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
     * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
     * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
     * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `lastId`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
     * `mtypes`: **([int])** mtype列表`
     * 返回：
-      * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<BroadcastMsg> }`
+      * `{ num:int16, lastId:int64, begin:int64, end:int64, msgs:list<BroadcastMsg> }`
       
 * `deleteMessage($mid, $from, $xid, $type)`: 删除业务消息历史
     * `mid`: **(long)**: 业务消息id
@@ -216,45 +216,45 @@ to the ```require``` section of your `composer.json` file.
       * `mtime`: 响应时间戳
       * `mid` : 聊天消息id
 
- * `getP2PChat($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)`: 获取P2P聊天历史
+ * `getP2PChat($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)`: 获取P2P聊天历史
     * `uid`: **(long)** 获取和两个用户之间的历史聊天消息
     * `ouid`: **(long)** 获取和两个用户之间的历史聊天消息
     * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
     * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
     * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
     * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条聊天消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `lastId`: **(long)** 最后一条聊天消息的id, 第一次默认传`0`, 条件：`> or <`
     * 返回:
-      * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<P2PMsg> }`
+      * `{ num:int16, lastId:int64, begin:int64, end:int64, msgs:list<P2PMsg> }`
       
- * `getGroupChat($gid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)`: 获取组聊天消息历史
+ * `getGroupChat($gid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)`: 获取组聊天消息历史
     * `gid`: **(long)** 组id
     * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
     * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
     * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
     * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条聊天消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `lastId`: **(long)** 最后一条聊天消息的id, 第一次默认传`0`, 条件：`> or <`
     * 返回：
-      * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<GroupMsg> }`
+      * `{ num:int16, lastId:int64, begin:int64, end:int64, msgs:list<GroupMsg> }`
       
- * `getRoomChat($rid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)`: 获取房间聊天消息历史
+ * `getRoomChat($rid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)`: 获取房间聊天消息历史
     * `rid`: **(long)** 房间id
     * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
     * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
     * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
     * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条聊天消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `lastId`: **(long)** 最后一条聊天消息的id, 第一次默认传`0`, 条件：`> or <`
     * 返回：
-      * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<RoomMsg> }`
+      * `{ num:int16, lastId:int64, begin:int64, end:int64, msgs:list<RoomMsg> }`
       
- * `getBroadcastChat($num, $desc, $begin = 0, $end = 0, $lastid = 0)`: 获取广播聊天消息历史
+ * `getBroadcastChat($num, $desc, $begin = 0, $end = 0, $lastId = 0)`: 获取广播聊天消息历史
     * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
     * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
     * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
     * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条聊天消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `lastId`: **(long)** 最后一条聊天消息的id, 第一次默认传`0`, 条件：`> or <`
     * 返回：
-      * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<BroadcastMsg> }`
+      * `{ num:int16, lastId:int64, begin:int64, end:int64, msgs:list<BroadcastMsg> }`
       
 * `deleteChat($mid, $from, $xid, $type)`: 删除聊天消息历史
     * `mid`: **(long)**: 聊天消息id
