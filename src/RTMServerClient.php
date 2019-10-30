@@ -288,7 +288,7 @@ class RTMServerClient
     
     public function getP2PChat($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)
     {
-        return getP2PMessage($uid, $ouid, $num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE));
+        return getP2PMessage($uid, $ouid, $num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE, RTM_CMD_MTYPE));
     }
     
     public function getGroupChat($gid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)
