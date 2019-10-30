@@ -306,6 +306,46 @@ to the ```require``` section of your `composer.json` file.
       * `mtime`: 响应时间戳
       * `mid` : 聊天消息id
       
+ * `getP2PAudio($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)`: 获取P2P聊天历史
+    * `uid`: **(long)** 获取和两个用户之间的历史聊天消息
+    * `ouid`: **(long)** 获取和两个用户之间的历史聊天消息
+    * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
+    * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
+    * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
+    * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
+    * `lastId`: **(long)** 最后一条聊天消息的id, 第一次默认传`0`, 条件：`> or <`
+    * 返回:
+      * `{ num:int16, lastId:int64, begin:int64, end:int64, msgs:list<P2PMsg> }`
+      
+ * `getGroupAudio($gid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)`: 获取组聊天消息历史
+    * `gid`: **(long)** 组id
+    * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
+    * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
+    * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
+    * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
+    * `lastId`: **(long)** 最后一条聊天消息的id, 第一次默认传`0`, 条件：`> or <`
+    * 返回：
+      * `{ num:int16, lastId:int64, begin:int64, end:int64, msgs:list<GroupMsg> }`
+      
+ * `getRoomAudio($rid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)`: 获取房间聊天消息历史
+    * `rid`: **(long)** 房间id
+    * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
+    * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
+    * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
+    * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
+    * `lastId`: **(long)** 最后一条聊天消息的id, 第一次默认传`0`, 条件：`> or <`
+    * 返回：
+      * `{ num:int16, lastId:int64, begin:int64, end:int64, msgs:list<RoomMsg> }`
+      
+ * `getBroadcastAudio($num, $desc, $begin = 0, $end = 0, $lastId = 0)`: 获取广播聊天消息历史
+    * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
+    * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
+    * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
+    * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
+    * `lastId`: **(long)** 最后一条聊天消息的id, 第一次默认传`0`, 条件：`> or <`
+    * 返回：
+      * `{ num:int16, lastId:int64, begin:int64, end:int64, msgs:list<BroadcastMsg> }`
+      
 * `translate($text, $dst, $src = '', $type = 'chat', $profanity = '')`: 翻译
     * `text`: **(string)**: 内容
     * `dst`: **(string)** 目标语言类型
@@ -320,6 +360,12 @@ to the ```require``` section of your `composer.json` file.
 
 * `profanity($text, $action = '')`: 敏感词过滤
     * `text`: **(string)**: 内容
+    * `action`: **(string)** stop: 返回错误，censor: 用星号(*)替换敏感词
+    * 返回：
+      * text: 过滤后的聊天消息
+      
+* `transcribe($audio, $action = '')`: 敏感词过滤
+    * `audio`: **(string)**: 语音内容
     * `action`: **(string)** stop: 返回错误，censor: 用星号(*)替换敏感词
     * 返回：
       * text: 过滤后的聊天消息
