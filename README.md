@@ -46,6 +46,31 @@ to the ```require``` section of your `composer.json` file.
 * `enableEncryptorByFile($file)`: 启用加密链接
     * `file`: **(string)**  证书文件路径
     
+### 客户端发起命令
+
+* `getToken($uid)`: 获取token
+    * `uid`: **(long)** 用户 id
+    * 返回：
+      * string  
+      
+* `kickOut($uid, $ce = null)`: 踢掉用户
+    * `uid`: **(long)** 用户 id
+    * `ce`: **(strring)** 如果 ce不为空，则只踢掉其中一个链接，多用户登录情况      
+
+* `addDevice($uid, $appType, $deviceToken)`: 添加设备
+    * `uid`: **(long)** 用户 id
+    * `appType`: **(strring)** app类型
+    * `deviceToken`: **(strring)** deviceToken
+    
+* `removeDevice($uid, $deviceToken)`: 删除设备
+    * `uid`: **(long)** 用户 id
+    * `deviceToken`: **(strring)** deviceToken    
+  
+* `removeToken($uid)`: 删除token
+    * `uid`: **(long)** 用户 id
+    
+### 消息相关   
+
 * `sendMessage($from, $to, $mtype, $msg, $attrs)`: 发送P2P业务消息
     * `from`: **(long)** 发送方 id
     * `to`: **(long)** 接收方uid
@@ -95,6 +120,58 @@ to the ```require``` section of your `composer.json` file.
       * `mtime`: 响应时间戳
       * `mid` : 业务消息id
       
+* `getP2PMessage($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())`: 获取P2P业务消息历史
+    * `uid`: **(long)** 获取和两个用户之间的历史业务消息
+    * `ouid`: **(long)** 获取和两个用户之间的历史业务消息
+    * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
+    * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
+    * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
+    * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
+    * `lastid`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `mtypes`: **([int])** mtype列表`
+    * 返回：
+      * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<P2PMsg> }`
+
+* `getGroupMessage($gid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())`: 获取组消息历史
+    * `gid`: **(long)** 组id
+    * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
+    * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
+    * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
+    * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
+    * `lastid`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `mtypes`: **([int])** mtype列表`
+    * 返回：
+      * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<GroupMsg> }`
+      
+* `getRoomMessage($rid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())`: 获取房间业务消息历史
+    * `rid`: **(long)** 房间id
+    * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
+    * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
+    * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
+    * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
+    * `lastid`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `mtypes`: **([int])** mtype列表`
+    * 返回：
+      * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<RoomMsg> }`
+      
+* `getBroadcastMessage($num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())`: 获取广播业务消息历史
+    * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
+    * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
+    * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
+    * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
+    * `lastid`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
+    * `mtypes`: **([int])** mtype列表`
+    * 返回：
+      * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<BroadcastMsg> }`
+      
+* `deleteMessage($mid, $from, $xid, $type)`: 删除业务消息历史
+    * `mid`: **(long)**: 业务消息id
+    * `from`: **(long)** 发布者id
+    * `xid`: **(long)** rid/gid/to id
+    * `type`: **(int)** 1,p2p; 2,group; 3, room; 4, broadcast  
+      
+### 聊天相关
+      
 * `sendChat($from, $to, $msg, $attrs)`: 发送聊天消息
     * `from`: **(long)** 发送方 id
     * `to`: **(long)** 接收方uid
@@ -139,50 +216,6 @@ to the ```require``` section of your `composer.json` file.
       * `mtime`: 响应时间戳
       * `mid` : 聊天消息id
 
- * `getP2PMessage($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())`: 获取P2P业务消息历史
-    * `uid`: **(long)** 获取和两个用户之间的历史业务消息
-    * `ouid`: **(long)** 获取和两个用户之间的历史业务消息
-    * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
-    * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
-    * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
-    * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
-    * `mtypes`: **([int])** mtype列表`
-    * 返回：
-      * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<P2PMsg> }`
-
- * `getGroupMessage($gid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())`: 获取组消息历史
-    * `gid`: **(long)** 组id
-    * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
-    * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
-    * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
-    * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
-    * `mtypes`: **([int])** mtype列表`
-    * 返回：
-      * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<GroupMsg> }`
-      
- * `getRoomMessage($rid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())`: 获取房间业务消息历史
-    * `rid`: **(long)** 房间id
-    * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
-    * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
-    * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
-    * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
-    * `mtypes`: **([int])** mtype列表`
-    * 返回：
-      * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<RoomMsg> }`
-      
- * `getBroadcastMessage($num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())`: 获取广播业务消息历史
-    * `desc`: **(bool)** `true`: 则从`end`的时间戳开始倒序翻页, `false`: 则从`begin`的时间戳顺序翻页
-    * `num`: **(int)** 获取数量, **一次最多获取20条, 建议10条**
-    * `begin`: **(long)** 开始时间戳, 毫秒, 默认`0`, 条件：`>=`
-    * `end`: **(long)** 结束时间戳, 毫秒, 默认`0`, 条件：`<=`
-    * `lastid`: **(long)** 最后一条业务消息的id, 第一次默认传`0`, 条件：`> or <`
-    * `mtypes`: **([int])** mtype列表`
-    * 返回：
-      * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<BroadcastMsg> }`
-
  * `getP2PChat($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)`: 获取P2P聊天历史
     * `uid`: **(long)** 获取和两个用户之间的历史聊天消息
     * `ouid`: **(long)** 获取和两个用户之间的历史聊天消息
@@ -223,12 +256,6 @@ to the ```require``` section of your `composer.json` file.
     * 返回：
       * `{ num:int16, lastid:int64, begin:int64, end:int64, msgs:list<BroadcastMsg> }`
       
- * `deleteMessage($mid, $from, $xid, $type)`: 删除业务消息历史
-    * `mid`: **(long)**: 业务消息id
-    * `from`: **(long)** 发布者id
-    * `xid`: **(long)** rid/gid/to id
-    * `type`: **(int)** 1,p2p; 2,group; 3, room; 4, broadcast  
-      
 * `deleteChat($mid, $from, $xid, $type)`: 删除聊天消息历史
     * `mid`: **(long)**: 聊天消息id
     * `from`: **(long)** 发布者id
@@ -253,6 +280,52 @@ to the ```require``` section of your `composer.json` file.
     * 返回：
       * text: 过滤后的聊天消息
       
+### 文件相关操作
+
+* `sendFile($from, $to, $mtype, $file)`: 发送文件
+    * `from`: **(long)** 发送方 id
+    * `to`: **(long)** 接收方 id
+    * `mtype`: **(byte)** 业务文件类型
+    * `file` : 文件地址
+    
+    
+### 用户操作相关    
+
+* `getOnlineUsers($uids)`: 获取在线用户
+    * `uids`: **(long)** 用户 id列表
+    * 返回：
+      * array(uid)   
+
+* `addProjectBlack($uid, $btime)`: 添加项目黑名单     
+    * `uid`: **(long)** 用户 id     
+    * `btime`: **(int)** 禁言时长，从当前时间开始，以秒计算       
+ 
+* `removeProjectBlack($uid)`: 取消项目黑名单   
+    * `uid`: **(long)** 用户 id    
+      
+* `isProjectBlack($uid)`: 判断是否为项目黑名单
+    * `uid`: **(long)** 用户 id
+    * 返回：
+      * bool        
+
+* `setUserInfo($uid, $oinfo = NULL, $pinfo = NULL)`: 设置用户的公开信息或者私有信息
+    * `uid`: **(long)** 用户 id        
+    * `oinfo`: **(string)** 公开信息 
+    * `pinfo`: **(string)** 私有信息   
+ 
+* `getUserInfo($uid) `: 获取用户的公开信息或者私有信息
+    * `uid`: **(long)** 用户 id
+    * 返回：
+      * oinfo
+      * pinfo 
+ 
+* `getUserOpenInfo($uids)`: 获取用户的公开信息
+    * `uid`: **(long)** 用户 id
+    * 返回：
+      * oinfo      
+      
+### 好友操作相关
+
 * `addFriends($uid, $friends)`: 添加好友
     * `uid`: **(long)** 用户 id
     * `friends`: **(long[])** 多个好友 id
@@ -276,7 +349,9 @@ to the ```require``` section of your `composer.json` file.
     * `uid`: **(long)** 用户 id
     * 返回：
       * array(uid)
- 
+
+### 群组操作相关
+
 * `addGroupMembers($gid, $uids)`: 添加组成员
     * `gid`: **(long)** 组 id
     * `uids`: **(long)** 成员用户id
@@ -302,17 +377,7 @@ to the ```require``` section of your `composer.json` file.
 * `getUserGroups($uid)`: 获取组列表
     * `uid`: **(long)** 用户 id
     * 返回：
-      * array(gid)    
-    
-* `getToken($uid)`: 获取token
-    * `uid`: **(long)** 用户 id
-    * 返回：
-      * string      
-      
-* `getOnlineUsers($uids)`: 获取在线用户
-    * `uids`: **(long)** 用户 id列表
-    * 返回：
-      * array(uid)      
+      * array(gid)           
       
 * `addGroupBan($gid, $uid, $btime)`: 添加group禁言
     * `gid`: **(long)** 组 id       
@@ -322,23 +387,7 @@ to the ```require``` section of your `composer.json` file.
 * `removeGroupBan($gid, $uid)`: 取消group禁言
     * `gid`: **(long)** 组 id       
     * `uid`: **(long)** 用户 id      
-  
-* `addRoomBan($rid, $uid, $btime)`: 添加room禁言
-    * `rid`: **(long)** 房间 id       
-    * `uid`: **(long)** 用户 id     
-    * `btime`: **(int)** 禁言时长，从当前时间开始，以秒计算      
-  
-* `removeRoomBan($rid, $uid)`: 取消room禁言
-    * `rid`: **(long)** 房间 id       
-    * `uid`: **(long)** 用户 id      
     
-* `addProjectBlack($uid, $btime)`: 添加项目黑名单     
-    * `uid`: **(long)** 用户 id     
-    * `btime`: **(int)** 禁言时长，从当前时间开始，以秒计算       
- 
-* `removeProjectBlack($uid)`: 取消项目黑名单   
-    * `uid`: **(long)** 用户 id      
- 
 * `isBanOfGroup($gid, $uid)`: 判断是否被组禁言
     * `gid`: **(long)** 组 id
     * `uid`: **(long)** 用户 id
@@ -354,7 +403,18 @@ to the ```require``` section of your `composer.json` file.
     * `gid`: **(long)** 组 id
     * 返回：
       * oinfo
-      * pinfo
+      * pinfo      
+  
+### 房间操作相关  
+  
+* `addRoomBan($rid, $uid, $btime)`: 添加room禁言
+    * `rid`: **(long)** 房间 id       
+    * `uid`: **(long)** 用户 id     
+    * `btime`: **(int)** 禁言时长，从当前时间开始，以秒计算      
+  
+* `removeRoomBan($rid, $uid)`: 取消room禁言
+    * `rid`: **(long)** 房间 id       
+    * `uid`: **(long)** 用户 id        
  
 * `isBanOfRoom($rid, $uid)`: 判断是否被房间禁言
     * `rid`: **(long)** 房间 id
@@ -373,27 +433,6 @@ to the ```require``` section of your `composer.json` file.
       * oinfo
       * pinfo 
 
-* `isProjectBlack($uid)`: 判断是否为项目黑名单
-    * `uid`: **(long)** 用户 id
-    * 返回：
-      * bool  
- 
-* `setUserInfo($uid, $oinfo = NULL, $pinfo = NULL)`: 设置用户的公开信息或者私有信息
-    * `uid`: **(long)** 用户 id        
-    * `oinfo`: **(string)** 公开信息 
-    * `pinfo`: **(string)** 私有信息   
- 
-* `getUserInfo($uid) `: 获取用户的公开信息或者私有信息
-    * `uid`: **(long)** 用户 id
-    * 返回：
-      * oinfo
-      * pinfo 
- 
-* `getUserOpenInfo($uids)`: 获取用户的公开信息
-    * `uid`: **(long)** 用户 id
-    * 返回：
-      * oinfo
-
 * `addRoomMember($rid, $uid)`: 添加房间成员
     * `rid`: **(long)** 房间 id
     * `uid`: **(long)** 成员用户id 
@@ -401,28 +440,9 @@ to the ```require``` section of your `composer.json` file.
 * `deleteRoomMember($rid, $uid)`: 删除房间成员
     * `rid`: **(long)** 房间 id
     * `uid`: **(long)** 成员用户id 
-    
-* `sendFile($from, $to, $mtype, $file)`: 发送文件
-    * `from`: **(long)** 发送方 id
-    * `to`: **(long)** 接收方 id
-    * `mtype`: **(byte)** 业务文件类型
-    * `file` : 文件地址
-    
-* `kickOut($uid, $ce = null)`: 踢掉用户
-    * `uid`: **(long)** 用户 id
-    * `ce`: **(strring)** 如果 ce不为空，则只踢掉其中一个链接，多用户登录情况
 
-* `addDevice($uid, $appType, $deviceToken)`: 添加设备
-    * `uid`: **(long)** 用户 id
-    * `appType`: **(strring)** app类型
-    * `deviceToken`: **(strring)** deviceToken
-    
-* `removeDevice($uid, $deviceToken)`: 删除设备
-    * `uid`: **(long)** 用户 id
-    * `deviceToken`: **(strring)** deviceToken
-    
-* `removeToken($uid)`: 删除token
-    * `uid`: **(long)** 用户 id
+
+### 数据存取相关
 
 * `dataGet($uid, $key)`: 获取存储的数据信息
     * `uid`: **(long)** 用户 id
