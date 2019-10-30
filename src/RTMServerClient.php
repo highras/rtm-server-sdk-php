@@ -5,6 +5,33 @@ namespace highras\rtm;
 use highras\fpnn\TCPClient;
 
 define("RTM_CHAT_MTYPE", 30);
+define("RTM_AUDIO_MTYPE", 31);
+
+class CommonMsg 
+{
+    public $id;
+    public $from;
+    public $mtype;
+    public $mid;
+    public $msg;
+    public $attrs;
+    public $mtime;
+}
+
+class GroupMsg extends CommonMsg  {}
+class RoomMsg extends CommonMsg {}
+class BroadcastMsg extends CommonMsg {}
+
+class P2PMsg
+{
+    public $id;
+    public $direction;
+    public $mtype;
+    public $mid;
+    public $msg;
+    public $attrs;
+    public $mtime;
+}
 
 class RTMServerClient
 {
@@ -203,9 +230,19 @@ class RTMServerClient
         return sendMessage($from, $to, RTM_CHAT_MTYPE, $msg, $attrs); 
     }
     
+    public function sendAudio($from, $to, $msg, $attrs)
+    {
+        return sendMessage($from, $to, RTM_AUDIO_MTYPE, $msg, $attrs); 
+    }
+    
     public function sendChats($from, $tos, $msg, $attrs)
     {
         return sendMessages($from, $tos, RTM_CHAT_MTYPE, $msg, $attrs); 
+    }
+    
+    public function sendAudios($from, $tos, $msg, $attrs)
+    {
+        return sendMessages($from, $tos, RTM_AUDIO_MTYPE, $msg, $attrs); 
     }
     
     public function sendGroupChat($from, $gid, $msg, $attrs)
@@ -213,9 +250,19 @@ class RTMServerClient
         return sendGroupMessage($from, $gid, RTM_CHAT_MTYPE, $msg, $attrs); 
     }
     
+    public function sendGroupAudio($from, $gid, $msg, $attrs)
+    {
+        return sendGroupMessage($from, $gid, RTM_AUDIO_MTYPE, $msg, $attrs); 
+    }
+    
     public function sendRoomChat($from, $rid, $msg, $attrs)
     {
         return sendRoomMessage($from, $rid, RTM_CHAT_MTYPE, $msg, $attrs); 
+    }
+    
+    public function sendRoomAudio($from, $rid, $msg, $attrs)
+    {
+        return sendRoomMessage($from, $rid, RTM_AUDIO_MTYPE, $msg, $attrs); 
     }
     
     public function broadcastChat($from, $msg, $attrs)
@@ -223,30 +270,35 @@ class RTMServerClient
         return broadcastMessage($from, RTM_CHAT_MTYPE, $msg, $attrs); 
     }
     
-    public function getP2PChat($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)
+    public function broadcastAudio($from, $msg, $attrs)
     {
-        return getP2PMessage($uid, $ouid, $num, $desc, $begin, $end, $lastid, array(RTM_CHAT_MTYPE));
+        return broadcastMessage($from, RTM_AUDIO_MTYPE, $msg, $attrs); 
     }
-
-    public function getGroupChat($gid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)
+    
+    public function getP2PChat($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)
     {
-        return getGroupMessage($gid, $num, $desc, $begin, $end, $lastid, array(RTM_CHAT_MTYPE));
+        return getP2PMessage($uid, $ouid, $num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE));
     }
-
-    public function getRoomChat($rid, $num, $desc, $begin = 0, $end = 0, $lastid = 0)
+    
+    public function getGroupChat($gid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)
     {
-        return getRoomMessage($rid, $num, $desc, $begin, $end, $lastid, array(RTM_CHAT_MTYPE));
+        return getGroupMessage($gid, $num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE));
     }
-
-    public function getBroadcastChat($num, $desc, $begin = 0, $end = 0, $lastid = 0)
+    
+    public function getRoomChat($rid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)
     {
-        return getBroadcastMessage($num, $desc, $begin, $end, $lastid, array(RTM_CHAT_MTYPE)); 
+        return getRoomMessage($rid, $num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE));
     }
-
+    
+    public function getBroadcastChat($num, $desc, $begin = 0, $end = 0, $lastId = 0)
+    {
+        return getBroadcastMessage($num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE)); 
+    }
+    
     public function deleteChat($mid, $from, $xid, $type) {
         return deleteMessage($mid, $from, $xid, $type);
     }
-
+    
     public function translate($text, $dst, $src = '', $type = 'chat', $profanity = '') {
         $salt = $this->generateSalt();
         $ts = time();
@@ -282,6 +334,25 @@ class RTMServerClient
             'text' => $text,
             'action' => $action
         ));
+        return [
+            'text' => $response['text']
+        ];
+    }
+
+    public function transcribe($audio, $action = NULL) {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $mid = $this->generateMessageId();
+        $params = array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'transcribe', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'audio' => $audio
+        );
+        if ($action != NULL)
+            $params['action'] = $action;
+        $response = $this->client->sendQuest("transcribe", $params);
         return [
             'text' => $response['text']
         ];
@@ -783,15 +854,15 @@ class RTMServerClient
      * @param int $desc
      * @param int $begin
      * @param int $end
-     * @param int $lastid
+     * @param int $lastId
      * @return mixed
      * @throws \Exception
      */
-    public function getP2PMessage($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())
+    public function getP2PMessage($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastId = 0, $mtypes = array())
     {
         $salt = $this->generateSalt();
         $ts = time();
-        return $this->client->sendQuest("getp2pmsg", array(
+        $res = $this->client->sendQuest("getp2pmsg", array(
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt, 'getp2pmsg', $ts),
             'salt' => $salt,
@@ -802,9 +873,28 @@ class RTMServerClient
             'desc' => $desc,
             'begin' => $begin,
             'end' => $end,
-            'lastid' => $lastid,
+            'lastid' => $lastId,
             'mtypes' => $mtypes
         ));
+        $msgs = array();
+        foreach ($res['msgs'] as $v) {
+            $msgStruct = new P2PMsg();
+            $msgStruct->id = (int)$v[0];
+            $msgStruct->direction = (bool)$v[1];
+            $msgStruct->mtype = (int)$v[2];
+            $msgStruct->mid = (int)$v[3];
+            $msgStruct->msg = $v[5];
+            $msgStruct->attrs = $v[6];
+            $msgStruct->mtime = (int)$v[7];
+            $msgs[] = $msgStruct;
+        }
+        return array(
+            'num' => (int)$res['num'],
+            'lastId' => (int)$res['lastid'],
+            'begin' => (int)$res['begin'],
+            'end' => (int)$res['end'],
+            'msgs' => $msgs
+        );
     }
 
     /**
@@ -813,15 +903,15 @@ class RTMServerClient
      * @param int $desc
      * @param int $begin
      * @param int $end
-     * @param int $lastid
+     * @param int $lastId
      * @return mixed
      * @throws \Exception
      */
-    public function getGroupMessage($gid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())
+    public function getGroupMessage($gid, $num, $desc, $begin = 0, $end = 0, $lastId = 0, $mtypes = array())
     {
         $salt = $this->generateSalt();
         $ts = time();
-        return $this->client->sendQuest("getgroupmsg", array(
+        $res = $this->client->sendQuest("getgroupmsg", array(
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt, 'getgroupmsg', $ts),
             'salt' => $salt,
@@ -831,9 +921,28 @@ class RTMServerClient
             'desc' => $desc,
             'begin' => $begin,
             'end' => $end,
-            'lastid' => $lastid,
+            'lastid' => $lastId,
             'mtypes' => $mtypes
         ));
+        $msgs = array();
+        foreach ($res['msgs'] as $v) {
+            $msgStruct = new GroupMsg();
+            $msgStruct->id = (int)$v[0];
+            $msgStruct->from = (int)$v[1];
+            $msgStruct->mtype = (int)$v[2];
+            $msgStruct->mid = (int)$v[3];
+            $msgStruct->msg = $v[5];
+            $msgStruct->attrs = $v[6];
+            $msgStruct->mtime = (int)$v[7];
+            $msgs[] = $msgStruct;
+        }
+        return array(
+            'num' => (int)$res['num'],
+            'lastId' => (int)$res['lastid'],
+            'begin' => (int)$res['begin'],
+            'end' => (int)$res['end'],
+            'msgs' => $msgs
+        );
     }
 
     /**
@@ -842,15 +951,15 @@ class RTMServerClient
      * @param int $desc
      * @param int $begin
      * @param int $end
-     * @param int $lastid
+     * @param int $lastId
      * @return mixed
      * @throws \Exception
      */
-    public function getRoomMessage($rid, $num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())
+    public function getRoomMessage($rid, $num, $desc, $begin = 0, $end = 0, $lastId = 0, $mtypes = array())
     {
         $salt = $this->generateSalt();
         $ts = time();
-        return $this->client->sendQuest("getroommsg", array(
+        $res = $this->client->sendQuest("getroommsg", array(
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt, 'getroommsg', $ts),
             'salt' => $salt,
@@ -860,9 +969,28 @@ class RTMServerClient
             'desc' => $desc,
             'begin' => $begin,
             'end' => $end,
-            'lastid' => $lastid,
+            'lastid' => $lastId,
             'mtypes' => $mtypes
         ));
+        $msgs = array();
+        foreach ($res['msgs'] as $v) {
+            $msgStruct = new RoomMsg();
+            $msgStruct->id = (int)$v[0];
+            $msgStruct->from = (int)$v[1];
+            $msgStruct->mtype = (int)$v[2];
+            $msgStruct->mid = (int)$v[3];
+            $msgStruct->msg = $v[5];
+            $msgStruct->attrs = $v[6];
+            $msgStruct->mtime = (int)$v[7];
+            $msgs[] = $msgStruct;
+        }
+        return array(
+            'num' => (int)$res['num'],
+            'lastId' => (int)$res['lastid'],
+            'begin' => (int)$res['begin'],
+            'end' => (int)$res['end'],
+            'msgs' => $msgs
+        );
     }
 
     /**
@@ -870,11 +998,11 @@ class RTMServerClient
      * @param int $desc
      * @param int $begin
      * @param int $end
-     * @param int $lastid
+     * @param int $lastId
      * @return mixed
      * @throws \Exception
      */
-    public function getBroadcastMessage($num, $desc, $begin = 0, $end = 0, $lastid = 0, $mtypes = array())
+    public function getBroadcastMessage($num, $desc, $begin = 0, $end = 0, $lastId = 0, $mtypes = array())
     {
         $salt = $this->generateSalt();
         $ts = time();
@@ -887,9 +1015,28 @@ class RTMServerClient
             'desc' => $desc,
             'begin' => $begin,
             'end' => $end,
-            'lastid' => $lastid,
+            'lastid' => $lastId,
             'mtypes' => $mtypes
         ));
+        $msgs = array();
+        foreach ($res['msgs'] as $v) {
+            $msgStruct = new BroadcastMsg();
+            $msgStruct->id = (int)$v[0];
+            $msgStruct->from = (int)$v[1];
+            $msgStruct->mtype = (int)$v[2];
+            $msgStruct->mid = (int)$v[3];
+            $msgStruct->msg = $v[5];
+            $msgStruct->attrs = $v[6];
+            $msgStruct->mtime = (int)$v[7];
+            $msgs[] = $msgStruct;
+        }
+        return array(
+            'num' => (int)$res['num'],
+            'lastId' => (int)$res['lastid'],
+            'begin' => (int)$res['begin'],
+            'end' => (int)$res['end'],
+            'msgs' => $msgs
+        );
     }
 
     /**
