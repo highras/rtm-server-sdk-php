@@ -6,6 +6,7 @@ use highras\fpnn\TCPClient;
 
 define("RTM_CHAT_MTYPE", 30);
 define("RTM_AUDIO_MTYPE", 31);
+define("RTM_CMD_MTYPE", 32);
 
 class CommonMsg 
 {
@@ -232,7 +233,12 @@ class RTMServerClient
     
     public function sendAudio($from, $to, $msg, $attrs)
     {
-        return sendMessage($from, $to, RTM_AUDIO_MTYPE, $msg, $attrs); 
+        return sendMessage($from, $to, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
+    }
+    
+    public function sendCmd($from, $to, $msg, $attrs)
+    {
+        return sendMessage($from, $to, RTM_CMD_MTYPE, $msg, $attrs); 
     }
     
     public function sendChats($from, $tos, $msg, $attrs)
@@ -242,7 +248,12 @@ class RTMServerClient
     
     public function sendAudios($from, $tos, $msg, $attrs)
     {
-        return sendMessages($from, $tos, RTM_AUDIO_MTYPE, $msg, $attrs); 
+        return sendMessages($from, $tos, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
+    }
+    
+    public function sendCmds($from, $tos, $msg, $attrs)
+    {
+        return sendMessages($from, $tos, RTM_CMD_MTYPE, $msg, $attrs); 
     }
     
     public function sendGroupChat($from, $gid, $msg, $attrs)
@@ -252,7 +263,7 @@ class RTMServerClient
     
     public function sendGroupAudio($from, $gid, $msg, $attrs)
     {
-        return sendGroupMessage($from, $gid, RTM_AUDIO_MTYPE, $msg, $attrs); 
+        return sendGroupMessage($from, $gid, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
     }
     
     public function sendRoomChat($from, $rid, $msg, $attrs)
@@ -262,7 +273,7 @@ class RTMServerClient
     
     public function sendRoomAudio($from, $rid, $msg, $attrs)
     {
-        return sendRoomMessage($from, $rid, RTM_AUDIO_MTYPE, $msg, $attrs); 
+        return sendRoomMessage($from, $rid, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
     }
     
     public function broadcastChat($from, $msg, $attrs)
@@ -272,7 +283,7 @@ class RTMServerClient
     
     public function broadcastAudio($from, $msg, $attrs)
     {
-        return broadcastMessage($from, RTM_AUDIO_MTYPE, $msg, $attrs); 
+        return broadcastMessage($from, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
     }
     
     public function getP2PChat($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)
