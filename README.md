@@ -193,8 +193,8 @@ to the ```require``` section of your `composer.json` file.
 * `sendCmd($from, $to, $msg, $attrs)`: 发送聊天相关系统命令
     * `from`: **(long)** 发送方 id
     * `to`: **(long)** 接收方uid
-    * `msg`: **(string)** 聊天消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
-    * `attrs`: **(string)** 聊天消息附加信息, 可传`""`
+    * `msg`: **(string)** 发送聊天中的各种系统命令，比如：申请入群,拒绝申请入群,邀请入群,拒绝邀请入群,加好友,删除好友,其他等和聊天相关的命令
+    * `attrs`: **(string)** 系统命令附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
       * `mid` : 聊天消息id
@@ -202,8 +202,8 @@ to the ```require``` section of your `composer.json` file.
 * `sendCmds($from, $tos, $msg, $attrs)`: 发送多人发送聊天相关系统命令
     * `from`: **(long)** 发送方 id
     * `tos`: **(long)** 接收方uids
-    * `msg`: **(string)** 聊天消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
-    * `attrs`: **(string)** 聊天消息附加信息, 可传`""`
+    * `msg`: **(string)** 发送聊天中的各种系统命令，比如：申请入群,拒绝申请入群,邀请入群,拒绝邀请入群,加好友,删除好友,其他等和聊天相关的命令
+    * `attrs`: **(string)** 系统命令附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
       * `mid` : 聊天消息id
@@ -280,45 +280,45 @@ to the ```require``` section of your `composer.json` file.
     * `xid`: **(long)** rid/gid/to id
     * `type`: **(int)** 1,p2p; 2,group; 3, room; 4, broadcast      
     
-* `sendAudio($from, $to, $msg, $attrs)`: 发送聊天消息
+* `sendAudio($from, $to, $msg, $attrs)`: 发送语音聊天消息
     * `from`: **(long)** 发送方 id
     * `to`: **(long)** 接收方uid
-    * `msg`: **(string)** 聊天消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
+    * `msg`: **(string)** 语音聊天内容
     * `attrs`: **(string)** 聊天消息附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
       * `mid` : 聊天消息id
 
-* `sendAudios($from, $tos, $msg, $attrs)`: 发送多人聊天消息
+* `sendAudios($from, $tos, $msg, $attrs)`: 发送多人语音聊天消息
     * `from`: **(long)** 发送方 id
     * `tos`: **(long)** 接收方uids
-    * `msg`: **(string)** 聊天消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
+    * `msg`: **(string)** 语音聊天内容
     * `attrs`: **(string)** 聊天消息附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
       * `mid` : 聊天消息id
 
-* `sendGroupAudio($from, $gid, $msg, $attrs)`: 发送组聊天消息
+* `sendGroupAudio($from, $gid, $msg, $attrs)`: 发送组语音聊天消息
     * `from`: **(long)** 发送方 id
     * `gid`: **(long)** group id
-    * `msg`: **(string)** 聊天消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
+    * `msg`: **(string)** 语音聊天内容
     * `attrs`: **(string)** 聊天消息附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
       * `mid` : 聊天消息id
 
-* `sendRoomAudio($from, $rid, $msg, $attrs)`: 发送房间聊天消息
+* `sendRoomAudio($from, $rid, $msg, $attrs)`: 发送房间语音聊天消息
     * `from`: **(long)** 发送方 id
     * `rid`: **(long)** room id
-    * `msg`: **(string)** 聊天消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
+    * `msg`: **(string)** 语音聊天内容
     * `attrs`: **(string)** 聊天消息附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
       * `mid` : 聊天消息id
       
- * `broadcastAudio($from, $msg, $attrs)`: 广播聊天消息
+ * `broadcastAudio($from, $msg, $attrs)`: 广播语音聊天消息
     * `from`: **(long)** admin id
-    * `msg`: **(string)** 聊天消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
+    * `msg`: **(string)** 语音聊天内容
     * `attrs`: **(string)** 聊天消息附加信息, 可传`""`
     * 返回：
       * `mtime`: 响应时间戳
