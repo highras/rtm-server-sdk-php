@@ -8,6 +8,12 @@ define("RTM_CHAT_MTYPE", 30);
 define("RTM_AUDIO_MTYPE", 31);
 define("RTM_CMD_MTYPE", 32);
 
+define("DELETE_MSG_TYPE_P2P", 1);
+define("DELETE_MSG_TYPE_GROUP", 2);
+define("DELETE_MSG_TYPE_ROOM", 3);
+define("DELETE_MSG_TYPE_BROADCAST", 4);
+
+
 class CommonMsg 
 {
     public $id;
@@ -306,8 +312,20 @@ class RTMServerClient
         return getBroadcastMessage($num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE)); 
     }
     
-    public function deleteChat($mid, $from, $xid, $type) {
-        return deleteMessage($mid, $from, $xid, $type);
+    public function deleteP2PChat($mid, $from, $xid) {
+        return deleteP2PMessage($mid, $from, $xid);
+    }
+    
+    public function deleteGroupChat($mid, $from, $xid) {
+        return deleteGroupMessage($mid, $from, $xid);
+    }
+    
+    public function deleteRoomChat($mid, $from, $xid) {
+        return deleteRoomMessage($mid, $from, $xid);
+    }
+    
+    public function deleteBroadcastChat($mid, $from, $xid) {
+        return deleteBroadcastMessage($mid, $from, $xid);
     }
     
     public function translate($text, $dst, $src = '', $type = 'chat', $profanity = '') {
@@ -1050,14 +1068,7 @@ class RTMServerClient
         );
     }
 
-    /**
-     * @param integer $mid
-     * @param integer $from
-     * @param integer $xid
-     * @param integer $type
-     * @throws \Exception
-     */
-    public function deleteMessage($mid, $from, $xid, $type)
+    public function deleteP2PMessage($mid, $from, $xid)
     {
         $salt = $this->generateSalt();
         $ts = time();
@@ -1069,7 +1080,55 @@ class RTMServerClient
             'mid' => (int)$mid,
             'from' => (int)$from,
             'xid' => (int)$xid,
-            'type' => (int)$type
+            'type' => DELETE_MSG_TYPE_P2P 
+        ]);
+    }
+    
+    public function deleteGroupMessage($mid, $from, $xid)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $this->client->sendQuest('delmsg', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'delmsg', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'mid' => (int)$mid,
+            'from' => (int)$from,
+            'xid' => (int)$xid,
+            'type' => DELETE_MSG_TYPE_GROUP 
+        ]);
+    }
+    
+    public function deleteRoomMessage($mid, $from, $xid)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $this->client->sendQuest('delmsg', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'delmsg', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'mid' => (int)$mid,
+            'from' => (int)$from,
+            'xid' => (int)$xid,
+            'type' => DELETE_MSG_TYPE_ROOM 
+        ]);
+    }
+    
+    public function deleteBroadcastMessage($mid, $from, $xid)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $this->client->sendQuest('delmsg', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'delmsg', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'mid' => (int)$mid,
+            'from' => (int)$from,
+            'xid' => (int)$xid,
+            'type' => DELETE_MSG_TYPE_BROADCAST
         ]);
     }
 
