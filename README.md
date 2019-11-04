@@ -164,11 +164,25 @@ to the ```require``` section of your `composer.json` file.
     * 返回：
       * `{ num:int16, lastId:int64, begin:int64, end:int64, msgs:list<BroadcastMsg> }`
       
-* `deleteMessage($mid, $from, $xid, $type)`: 删除业务消息历史
+* `deleteP2PMessage($mid, $from, $xid)`: 删除P2P消息历史
     * `mid`: **(long)**: 业务消息id
     * `from`: **(long)** 发布者id
     * `xid`: **(long)** rid/gid/to id
-    * `type`: **(int)** 1,p2p; 2,group; 3, room; 4, broadcast  
+
+* `deleteGroupMessage($mid, $from, $xid)`: 删除组消息历史
+    * `mid`: **(long)**: 业务消息id
+    * `from`: **(long)** 发布者id
+    * `xid`: **(long)** rid/gid/to id
+    
+* `deleteRoomMessage($mid, $from, $xid)`: 删除房间消息历史
+    * `mid`: **(long)**: 业务消息id
+    * `from`: **(long)** 发布者id
+    * `xid`: **(long)** rid/gid/to id
+    
+* `deleteBroadcastMessage($mid, $from, $xid)`: 删除广播消息历史
+    * `mid`: **(long)**: 业务消息id
+    * `from`: **(long)** 发布者id
+    * `xid`: **(long)** rid/gid/to id
       
 ### 聊天相关
       
@@ -273,12 +287,26 @@ to the ```require``` section of your `composer.json` file.
     * `lastId`: **(long)** 最后一条聊天消息的id, 第一次默认传`0`, 条件：`> or <`
     * 返回：
       * `{ num:int16, lastId:int64, begin:int64, end:int64, msgs:list<BroadcastMsg> }`
-      
-* `deleteChat($mid, $from, $xid, $type)`: 删除聊天消息历史
-    * `mid`: **(long)**: 聊天消息id
+
+* `deleteP2PChat($mid, $from, $xid)`: 删除P2P聊天历史
+    * `mid`: **(long)**: 业务消息id
     * `from`: **(long)** 发布者id
     * `xid`: **(long)** rid/gid/to id
-    * `type`: **(int)** 1,p2p; 2,group; 3, room; 4, broadcast      
+
+* `deleteGroupChat($mid, $from, $xid)`: 删除组聊天历史
+    * `mid`: **(long)**: 业务消息id
+    * `from`: **(long)** 发布者id
+    * `xid`: **(long)** rid/gid/to id
+    
+* `deleteRoomChat($mid, $from, $xid)`: 删除房间聊天历史
+    * `mid`: **(long)**: 业务消息id
+    * `from`: **(long)** 发布者id
+    * `xid`: **(long)** rid/gid/to id
+    
+* `deleteBroadcastChat($mid, $from, $xid)`: 删除广播聊天历史
+    * `mid`: **(long)**: 业务消息id
+    * `from`: **(long)** 发布者id
+    * `xid`: **(long)** rid/gid/to id
     
 * `sendAudio($from, $to, $msg, $attrs)`: 发送语音聊天消息
     * `from`: **(long)** 发送方 id
