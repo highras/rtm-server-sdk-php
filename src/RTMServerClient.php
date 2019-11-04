@@ -272,6 +272,11 @@ class RTMServerClient
         return sendGroupMessage($from, $gid, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
     }
     
+    public function sendGroupCmd($from, $gid, $msg, $attrs)
+    {
+        return sendGroupMessage($from, $gid, RTM_CMD_MTYPE, $msg, $attrs); 
+    }
+    
     public function sendRoomChat($from, $rid, $msg, $attrs)
     {
         return sendRoomMessage($from, $rid, RTM_CHAT_MTYPE, $msg, $attrs); 
@@ -282,6 +287,11 @@ class RTMServerClient
         return sendRoomMessage($from, $rid, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
     }
     
+    public function sendRoomCmd($from, $rid, $msg, $attrs)
+    {
+        return sendRoomMessage($from, $rid, RTM_CMD_MTYPE, $msg, $attrs); 
+    }
+    
     public function broadcastChat($from, $msg, $attrs)
     {
         return broadcastMessage($from, RTM_CHAT_MTYPE, $msg, $attrs); 
@@ -290,6 +300,11 @@ class RTMServerClient
     public function broadcastAudio($from, $msg, $attrs)
     {
         return broadcastMessage($from, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
+    }
+    
+    public function broadcastCmd($from, $msg, $attrs)
+    {
+        return broadcastMessage($from, RTM_CMD_MTYPE, $msg, $attrs); 
     }
     
     public function getP2PChat($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)
