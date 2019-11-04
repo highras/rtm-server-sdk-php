@@ -247,6 +247,32 @@ to the ```require``` section of your `composer.json` file.
     * 返回：
       * `mtime`: 响应时间戳
       * `mid` : 聊天消息id
+      
+* `sendGroupCmd($from, $gid, $msg, $attrs)`: 发送组聊天控制命令
+    * `from`: **(long)** 发送方 id
+    * `gid`: **(long)** group id
+    * `msg`: **(string)** 聊天消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
+    * `attrs`: **(string)** 聊天消息附加信息, 可传`""`
+    * 返回：
+      * `mtime`: 响应时间戳
+      * `mid` : 聊天消息id
+
+* `sendRoomCmd($from, $rid, $msg, $attrs)`: 发送房间聊天控制命令
+    * `from`: **(long)** 发送方 id
+    * `rid`: **(long)** room id
+    * `msg`: **(string)** 聊天消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
+    * `attrs`: **(string)** 聊天消息附加信息, 可传`""`
+    * 返回：
+      * `mtime`: 响应时间戳
+      * `mid` : 聊天消息id
+      
+ * `broadcastCmd($from, $msg, $attrs)`: 广播聊天控制命令
+    * `from`: **(long)** admin id
+    * `msg`: **(string)** 聊天消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
+    * `attrs`: **(string)** 聊天消息附加信息, 可传`""`
+    * 返回：
+      * `mtime`: 响应时间戳
+      * `mid` : 聊天消息id
 
  * `getP2PChat($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)`: 获取P2P聊天历史
     * `uid`: **(long)** 获取和两个用户之间的历史聊天消息
