@@ -383,7 +383,7 @@ class RTMServerClient
         ];
     }
 
-    public function transcribe($audio, $action = NULL) {
+    public function transcribe($audio, $lang, $action = NULL) {
         $salt = $this->generateSalt();
         $ts = time();
         $mid = $this->generateMessageId();
@@ -392,13 +392,15 @@ class RTMServerClient
             'sign' => $this->generateSignature($salt, 'transcribe', $ts),
             'salt' => $salt,
             'ts' => $ts,
-            'audio' => $audio
+            'audio' => $audio,
+            'lang' => $lang
         );
         if ($action != NULL)
             $params['action'] = $action;
         $response = $this->client->sendQuest("transcribe", $params);
         return [
-            'text' => $response['text']
+            'text' => $response['text'],
+            'lang' => $response['lang']
         ];
     }
 
