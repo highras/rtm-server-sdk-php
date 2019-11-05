@@ -396,8 +396,9 @@ to the ```require``` section of your `composer.json` file.
     * 返回：
       * text: 过滤后的聊天消息
       
-* `transcribe($audio, $action = '')`: 语音识别
+* `transcribe($audio, $lang, $action = '')`: 语音识别
     * `audio`: **(string)**: 语音内容
+    * `lang`: **(string)**: 语言
     * `action`: **(string)** stop: 返回错误，censor: 用星号(*)替换敏感词
     * 返回：
       * text: 过滤后的聊天消息
