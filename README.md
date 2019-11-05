@@ -316,7 +316,7 @@ to the ```require``` section of your `composer.json` file.
 * `deleteP2PChat($mid, $from, $to)`: 删除P2P聊天历史
     * `mid`: **(long)**: 业务消息id
     * `from`: **(long)** 发布者id
-    * `to`: **(long)** 接受者id
+    * `to`: **(long)** 接收者id
 
 * `deleteGroupChat($mid, $from, $gid)`: 删除组聊天历史
     * `mid`: **(long)**: 业务消息id
