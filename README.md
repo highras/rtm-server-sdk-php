@@ -164,25 +164,24 @@ to the ```require``` section of your `composer.json` file.
     * 返回：
       * `{ num:int16, lastId:int64, begin:int64, end:int64, msgs:list<BroadcastMsg> }`
       
-* `deleteP2PMessage($mid, $from, $xid)`: 删除P2P消息历史
+* `deleteP2PMessage($mid, $from, $to)`: 删除P2P消息历史
     * `mid`: **(long)**: 业务消息id
     * `from`: **(long)** 发布者id
-    * `xid`: **(long)** rid/gid/to id
+    * `to`: **(long)** 接收者id
 
-* `deleteGroupMessage($mid, $from, $xid)`: 删除组消息历史
+* `deleteGroupMessage($mid, $from, $gid)`: 删除组消息历史
     * `mid`: **(long)**: 业务消息id
     * `from`: **(long)** 发布者id
-    * `xid`: **(long)** rid/gid/to id
+    * `gid`: **(long)** 组id
     
-* `deleteRoomMessage($mid, $from, $xid)`: 删除房间消息历史
+* `deleteRoomMessage($mid, $from, $rid)`: 删除房间消息历史
     * `mid`: **(long)**: 业务消息id
     * `from`: **(long)** 发布者id
-    * `xid`: **(long)** rid/gid/to id
+    * `rid`: **(long)** 房间id
     
-* `deleteBroadcastMessage($mid, $from, $xid)`: 删除广播消息历史
+* `deleteBroadcastMessage($mid, $from)`: 删除广播消息历史
     * `mid`: **(long)**: 业务消息id
     * `from`: **(long)** 发布者id
-    * `xid`: **(long)** rid/gid/to id
       
 ### 聊天相关
       
@@ -314,25 +313,24 @@ to the ```require``` section of your `composer.json` file.
     * 返回：
       * `{ num:int16, lastId:int64, begin:int64, end:int64, msgs:list<BroadcastMsg> }`
 
-* `deleteP2PChat($mid, $from, $xid)`: 删除P2P聊天历史
+* `deleteP2PChat($mid, $from, $to)`: 删除P2P聊天历史
     * `mid`: **(long)**: 业务消息id
     * `from`: **(long)** 发布者id
-    * `xid`: **(long)** rid/gid/to id
+    * `to`: **(long)** 接受者id
 
-* `deleteGroupChat($mid, $from, $xid)`: 删除组聊天历史
+* `deleteGroupChat($mid, $from, $gid)`: 删除组聊天历史
     * `mid`: **(long)**: 业务消息id
     * `from`: **(long)** 发布者id
-    * `xid`: **(long)** rid/gid/to id
+    * `gid`: **(long)** 组id
     
-* `deleteRoomChat($mid, $from, $xid)`: 删除房间聊天历史
+* `deleteRoomChat($mid, $from, $rid)`: 删除房间聊天历史
     * `mid`: **(long)**: 业务消息id
     * `from`: **(long)** 发布者id
-    * `xid`: **(long)** rid/gid/to id
+    * `rid`: **(long)** 房间id
     
-* `deleteBroadcastChat($mid, $from, $xid)`: 删除广播聊天历史
+* `deleteBroadcastChat($mid, $from)`: 删除广播聊天历史
     * `mid`: **(long)**: 业务消息id
     * `from`: **(long)** 发布者id
-    * `xid`: **(long)** rid/gid/to id
     
 * `sendAudio($from, $to, $msg, $attrs)`: 发送语音聊天消息
     * `from`: **(long)** 发送方 id

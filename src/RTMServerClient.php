@@ -327,20 +327,20 @@ class RTMServerClient
         return getBroadcastMessage($num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE)); 
     }
     
-    public function deleteP2PChat($mid, $from, $xid) {
-        return deleteP2PMessage($mid, $from, $xid);
+    public function deleteP2PChat($mid, $from, $to) {
+        return deleteP2PMessage($mid, $from, $to);
     }
     
-    public function deleteGroupChat($mid, $from, $xid) {
-        return deleteGroupMessage($mid, $from, $xid);
+    public function deleteGroupChat($mid, $from, $gid) {
+        return deleteGroupMessage($mid, $from, $gid);
     }
     
-    public function deleteRoomChat($mid, $from, $xid) {
-        return deleteRoomMessage($mid, $from, $xid);
+    public function deleteRoomChat($mid, $from, $rid) {
+        return deleteRoomMessage($mid, $from, $rid);
     }
     
-    public function deleteBroadcastChat($mid, $from, $xid) {
-        return deleteBroadcastMessage($mid, $from, $xid);
+    public function deleteBroadcastChat($mid, $from) {
+        return deleteBroadcastMessage($mid, $from);
     }
     
     public function translate($text, $dst, $src = '', $type = 'chat', $profanity = '') {
@@ -1085,7 +1085,7 @@ class RTMServerClient
         );
     }
 
-    public function deleteP2PMessage($mid, $from, $xid)
+    public function deleteP2PMessage($mid, $from, $to)
     {
         $salt = $this->generateSalt();
         $ts = time();
@@ -1096,12 +1096,12 @@ class RTMServerClient
             'ts' => $ts,
             'mid' => (int)$mid,
             'from' => (int)$from,
-            'xid' => (int)$xid,
+            'xid' => (int)$to,
             'type' => DELETE_MSG_TYPE_P2P 
         ]);
     }
     
-    public function deleteGroupMessage($mid, $from, $xid)
+    public function deleteGroupMessage($mid, $from, $gid)
     {
         $salt = $this->generateSalt();
         $ts = time();
@@ -1112,12 +1112,12 @@ class RTMServerClient
             'ts' => $ts,
             'mid' => (int)$mid,
             'from' => (int)$from,
-            'xid' => (int)$xid,
+            'xid' => (int)$gid,
             'type' => DELETE_MSG_TYPE_GROUP 
         ]);
     }
     
-    public function deleteRoomMessage($mid, $from, $xid)
+    public function deleteRoomMessage($mid, $from, $rid)
     {
         $salt = $this->generateSalt();
         $ts = time();
@@ -1128,12 +1128,12 @@ class RTMServerClient
             'ts' => $ts,
             'mid' => (int)$mid,
             'from' => (int)$from,
-            'xid' => (int)$xid,
+            'xid' => (int)$rid,
             'type' => DELETE_MSG_TYPE_ROOM 
         ]);
     }
     
-    public function deleteBroadcastMessage($mid, $from, $xid)
+    public function deleteBroadcastMessage($mid, $from)
     {
         $salt = $this->generateSalt();
         $ts = time();
@@ -1144,7 +1144,6 @@ class RTMServerClient
             'ts' => $ts,
             'mid' => (int)$mid,
             'from' => (int)$from,
-            'xid' => (int)$xid,
             'type' => DELETE_MSG_TYPE_BROADCAST
         ]);
     }
