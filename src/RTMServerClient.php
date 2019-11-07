@@ -234,113 +234,113 @@ class RTMServerClient
     
     public function sendChat($from, $to, $msg, $attrs)
     {
-        return sendMessage($from, $to, RTM_CHAT_MTYPE, $msg, $attrs); 
+        return $this->sendMessage($from, $to, RTM_CHAT_MTYPE, $msg, $attrs); 
     }
     
     public function sendAudio($from, $to, $msg, $attrs)
     {
-        return sendMessage($from, $to, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
+        return $this->sendMessage($from, $to, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
     }
     
     public function sendCmd($from, $to, $msg, $attrs)
     {
-        return sendMessage($from, $to, RTM_CMD_MTYPE, $msg, $attrs); 
+        return $this->sendMessage($from, $to, RTM_CMD_MTYPE, $msg, $attrs); 
     }
     
     public function sendChats($from, $tos, $msg, $attrs)
     {
-        return sendMessages($from, $tos, RTM_CHAT_MTYPE, $msg, $attrs); 
+        return $this->sendMessages($from, $tos, RTM_CHAT_MTYPE, $msg, $attrs); 
     }
     
     public function sendAudios($from, $tos, $msg, $attrs)
     {
-        return sendMessages($from, $tos, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
+        return $this->sendMessages($from, $tos, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
     }
     
     public function sendCmds($from, $tos, $msg, $attrs)
     {
-        return sendMessages($from, $tos, RTM_CMD_MTYPE, $msg, $attrs); 
+        return $this->sendMessages($from, $tos, RTM_CMD_MTYPE, $msg, $attrs); 
     }
     
     public function sendGroupChat($from, $gid, $msg, $attrs)
     {
-        return sendGroupMessage($from, $gid, RTM_CHAT_MTYPE, $msg, $attrs); 
+        return $this->sendGroupMessage($from, $gid, RTM_CHAT_MTYPE, $msg, $attrs); 
     }
     
     public function sendGroupAudio($from, $gid, $msg, $attrs)
     {
-        return sendGroupMessage($from, $gid, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
+        return $this->sendGroupMessage($from, $gid, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
     }
     
     public function sendGroupCmd($from, $gid, $msg, $attrs)
     {
-        return sendGroupMessage($from, $gid, RTM_CMD_MTYPE, $msg, $attrs); 
+        return $this->sendGroupMessage($from, $gid, RTM_CMD_MTYPE, $msg, $attrs); 
     }
     
     public function sendRoomChat($from, $rid, $msg, $attrs)
     {
-        return sendRoomMessage($from, $rid, RTM_CHAT_MTYPE, $msg, $attrs); 
+        return $this->sendRoomMessage($from, $rid, RTM_CHAT_MTYPE, $msg, $attrs); 
     }
     
     public function sendRoomAudio($from, $rid, $msg, $attrs)
     {
-        return sendRoomMessage($from, $rid, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
+        return $this->sendRoomMessage($from, $rid, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
     }
     
     public function sendRoomCmd($from, $rid, $msg, $attrs)
     {
-        return sendRoomMessage($from, $rid, RTM_CMD_MTYPE, $msg, $attrs); 
+        return $this->sendRoomMessage($from, $rid, RTM_CMD_MTYPE, $msg, $attrs); 
     }
     
     public function broadcastChat($from, $msg, $attrs)
     {
-        return broadcastMessage($from, RTM_CHAT_MTYPE, $msg, $attrs); 
+        return $this->broadcastMessage($from, RTM_CHAT_MTYPE, $msg, $attrs); 
     }
     
     public function broadcastAudio($from, $msg, $attrs)
     {
-        return broadcastMessage($from, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
+        return $this->broadcastMessage($from, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
     }
     
     public function broadcastCmd($from, $msg, $attrs)
     {
-        return broadcastMessage($from, RTM_CMD_MTYPE, $msg, $attrs); 
+        return $this->broadcastMessage($from, RTM_CMD_MTYPE, $msg, $attrs); 
     }
     
     public function getP2PChat($uid, $ouid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)
     {
-        return getP2PMessage($uid, $ouid, $num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE, RTM_CMD_MTYPE));
+        return $this->getP2PMessage($uid, $ouid, $num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE, RTM_CMD_MTYPE));
     }
     
     public function getGroupChat($gid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)
     {
-        return getGroupMessage($gid, $num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE));
+        return $this->getGroupMessage($gid, $num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE));
     }
     
     public function getRoomChat($rid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)
     {
-        return getRoomMessage($rid, $num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE));
+        return $this->getRoomMessage($rid, $num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE));
     }
     
     public function getBroadcastChat($num, $desc, $begin = 0, $end = 0, $lastId = 0)
     {
-        return getBroadcastMessage($num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE)); 
+        return $this->getBroadcastMessage($num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE)); 
     }
     
     public function deleteP2PChat($mid, $from, $to) {
-        return deleteP2PMessage($mid, $from, $to);
+        return $this->deleteP2PMessage($mid, $from, $to);
     }
     
     public function deleteGroupChat($mid, $from, $gid) {
-        return deleteGroupMessage($mid, $from, $gid);
+        return $this->deleteGroupMessage($mid, $from, $gid);
     }
     
     public function deleteRoomChat($mid, $from, $rid) {
-        return deleteRoomMessage($mid, $from, $rid);
+        return $this->deleteRoomMessage($mid, $from, $rid);
     }
     
     public function deleteBroadcastChat($mid, $from) {
-        return deleteBroadcastMessage($mid, $from);
+        return $this->deleteBroadcastMessage($mid, $from);
     }
     
     public function translate($text, $dst, $src = '', $type = 'chat', $profanity = '') {
