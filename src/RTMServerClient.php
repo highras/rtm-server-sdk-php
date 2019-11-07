@@ -395,7 +395,7 @@ class RTMServerClient
             'audio' => $audio,
             'lang' => $lang
         );
-        if ($action != NULL)
+        if ($action !== NULL)
             $params['action'] = $action;
         $response = $this->client->sendQuest("transcribe", $params);
         return [
@@ -699,9 +699,9 @@ class RTMServerClient
             'ts' => $ts,
             'gid' => $gid
         );
-        if ($oinfo != NULL)
+        if ($oinfo !== NULL)
             $params['oinfo'] = $oinfo;
-        if ($pinfo != NULL)
+        if ($pinfo !== NULL)
             $params['pinfo'] = $pinfo;
         $res = $this->client->sendQuest("setgroupinfo", $params);
     }
@@ -746,9 +746,9 @@ class RTMServerClient
             'ts' => $ts,
             'rid' => $rid,
         );
-        if ($oinfo != NULL)
+        if ($oinfo !== NULL)
             $params['oinfo'] = $oinfo;
-        if ($pinfo != NULL)
+        if ($pinfo !== NULL)
             $params['pinfo'] = $pinfo;
         $res = $this->client->sendQuest("setroominfo", $params);
     }
@@ -792,9 +792,9 @@ class RTMServerClient
             'ts' => $ts,
             'uid' => $uid
         );
-        if ($oinfo != NULL)
+        if ($oinfo !== NULL)
             $params['oinfo'] = $oinfo;
-        if ($pinfo != NULL)
+        if ($pinfo !== NULL)
             $params['pinfo'] = $pinfo;
         $res = $this->client->sendQuest("setuserinfo", $params);
     }
