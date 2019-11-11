@@ -1144,7 +1144,8 @@ class RTMServerClient
             'ts' => $ts,
             'mid' => (int)$mid,
             'from' => (int)$from,
-            'type' => DELETE_MSG_TYPE_BROADCAST
+            'type' => DELETE_MSG_TYPE_BROADCAST,
+            'xid' => 0
         ]);
     }
 
