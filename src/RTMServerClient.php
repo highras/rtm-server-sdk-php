@@ -721,6 +721,10 @@ class RTMServerClient
             'ts' => $ts,
             'gid' => $gid
         ));
+
+        if (!is_array($res))
+            return array();
+
         $info = array();
         if (isset($res['oinfo']))
             $info['oinfo'] = $res['oinfo'];
@@ -777,6 +781,10 @@ class RTMServerClient
             'ts' => $ts,
             'rid' => $rid
         ));
+        
+        if (!is_array($res))
+            return array();
+
         $info = array();
         if (isset($res['oinfo']))
             $info['oinfo'] = $res['oinfo'];
@@ -832,6 +840,10 @@ class RTMServerClient
             'ts' => $ts,
             'uid' => $uid
         ));
+        
+        if (!is_array($res))
+            return array();
+
         $info = array();
         if (isset($res['oinfo']))
             $info['oinfo'] = $res['oinfo'];
@@ -1241,7 +1253,7 @@ class RTMServerClient
     {
         $salt = $this->generateSalt();
         $ts = time();
-        return $this->client->sendQuest('dataget', [
+        $data = $this->client->sendQuest('dataget', [
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt, 'dataget', $ts),
             'salt' => $salt,
@@ -1249,6 +1261,9 @@ class RTMServerClient
             'uid' => (int)$uid,
             'key' => $key
         ]);
+        if (!is_array($data))
+            return array();
+        return $data; 
     }
 
     public function dataSet($uid, $key, $value)
