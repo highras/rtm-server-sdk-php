@@ -690,6 +690,9 @@ class RTMServerClient
 
 	public function setGroupInfo($gid, $oinfo = NULL, $pinfo = NULL)
     {
+        if ($oinfo === NULL && $pinfo === NULL)
+            return false;
+
         $salt = $this->generateSalt();
         $ts = time();
         $params = array(
@@ -704,6 +707,7 @@ class RTMServerClient
         if ($pinfo !== NULL)
             $params['pinfo'] = $pinfo;
         $res = $this->client->sendQuest("setgroupinfo", $params);
+        return true;
     }
 
 	public function getGroupInfo($gid) 
@@ -737,6 +741,9 @@ class RTMServerClient
 
 	public function setRoomInfo($rid, $oinfo = NULL, $pinfo = NULL)
     {
+        if ($oinfo === NULL && $pinfo === NULL)
+            return false;
+
         $salt = $this->generateSalt();
         $ts = time();
         $params = array(
@@ -751,6 +758,7 @@ class RTMServerClient
         if ($pinfo !== NULL)
             $params['pinfo'] = $pinfo;
         $res = $this->client->sendQuest("setroominfo", $params);
+        return true;
     }
 
 	public function getRoomInfo($rid) 
@@ -783,6 +791,9 @@ class RTMServerClient
 
     public function setUserInfo($uid, $oinfo = NULL, $pinfo = NULL)
     {
+        if ($oinfo === NULL && $pinfo === NULL)
+            return false;
+
         $salt = $this->generateSalt();
         $ts = time();
         $params = array(
@@ -797,6 +808,7 @@ class RTMServerClient
         if ($pinfo !== NULL)
             $params['pinfo'] = $pinfo;
         $res = $this->client->sendQuest("setuserinfo", $params);
+        return true;
     }
 
 	public function getUserInfo($uid) 
