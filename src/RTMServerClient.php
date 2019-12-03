@@ -721,7 +721,12 @@ class RTMServerClient
             'ts' => $ts,
             'gid' => $gid
         ));
-		return array('oinfo' => $res['oinfo'], 'pinfo' => $res['pinfo']);
+        $info = array();
+        if (isset($res['oinfo']))
+            $info['oinfo'] = $res['oinfo'];
+        if (isset($res['pinfo']))
+            $info['pinfo'] = $res['pinfo'];
+        return $info;
 	}
 
     public function isBanOfRoom($rid, $uid)
@@ -772,7 +777,12 @@ class RTMServerClient
             'ts' => $ts,
             'rid' => $rid
         ));
-		return array('oinfo' => $res['oinfo'], 'pinfo' => $res['pinfo']);
+        $info = array();
+        if (isset($res['oinfo']))
+            $info['oinfo'] = $res['oinfo'];
+        if (isset($res['pinfo']))
+            $info['pinfo'] = $res['pinfo'];
+        return $info;
 	}
 
     public function isProjectBlack($uid)
@@ -822,7 +832,12 @@ class RTMServerClient
             'ts' => $ts,
             'uid' => $uid
         ));
-		return array('oinfo' => $res['oinfo'], 'pinfo' => $res['pinfo']);
+        $info = array();
+        if (isset($res['oinfo']))
+            $info['oinfo'] = $res['oinfo'];
+        if (isset($res['pinfo']))
+            $info['pinfo'] = $res['pinfo'];
+        return $info;
 	}
 
 	public function getUserOpenInfo($uids) 
