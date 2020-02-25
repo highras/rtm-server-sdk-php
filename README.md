@@ -196,7 +196,7 @@ to the ```require``` section of your `composer.json` file.
 
 * `sendChats($from, $tos, $msg, $attrs)`: 发送多人聊天消息
     * `from`: **(long)** 发送方 id
-    * `tos`: **(long)** 接收方uids
+    * `tos`: **(long[])** 接收方uids
     * `msg`: **(string)** 聊天消息内容，附加修饰信息不要放这里，方便后继的操作，比如翻译，敏感词过滤等等
     * `attrs`: **(string)** 聊天消息附加信息, 可传`""`
     * 返回：
@@ -214,7 +214,7 @@ to the ```require``` section of your `composer.json` file.
 
 * `sendCmds($from, $tos, $msg, $attrs)`: 发送多人发送聊天相关系统命令
     * `from`: **(long)** 发送方 id
-    * `tos`: **(long)** 接收方uids
+    * `tos`: **(long[])** 接收方uids
     * `msg`: **(string)** 发送聊天中的各种系统命令，比如：申请入群,拒绝申请入群,邀请入群,拒绝邀请入群,加好友,删除好友,其他等和聊天相关的命令
     * `attrs`: **(string)** 系统命令附加信息, 可传`""`
     * 返回：
@@ -476,11 +476,11 @@ to the ```require``` section of your `composer.json` file.
 
 * `addGroupMembers($gid, $uids)`: 添加组成员
     * `gid`: **(long)** 组 id
-    * `uids`: **(long)** 成员用户id
+    * `uids`: **(long[])** 成员用户id
 
 * `deleteGroupMembers($gid, $uids)`: 删除组成员
     * `gid`: **(long)** 组 id
-    * `uids`: **(long)** 成员用户id
+    * `uids`: **(long[])** 成员用户id
     
 * `deleteGroup($gid)`: 删除组
     * `gid`: **(long)** 组 id
