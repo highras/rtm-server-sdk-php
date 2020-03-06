@@ -385,10 +385,7 @@ class RTMServerClient
         if ($uid !== NULL)
             $param['uid'] = $uid;
         $response = $this->client->sendQuest("profanity", $param);
-        $result = array('text' => $response['text']);
-        if (isset($response['classification']))
-           $result['classification'] = $response['classification']; 
-        return $result; 
+        return $response;
     }
 
     public function transcribe($audio, $lang, $uid = NULL, $codec = NULL, $srate = 16000) {
