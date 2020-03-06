@@ -343,11 +343,11 @@ class RTMServerClient
         return $this->deleteBroadcastMessage($mid, $from);
     }
     
-    public function translate($text, $dst, $src = '', $type = 'chat', $profanity = '') {
+    public function translate($text, $dst, $src = '', $type = 'chat', $profanity = '', $postProfanity = false, $uid = NULL) {
         $salt = $this->generateSalt();
         $ts = time();
         $mid = $this->generateMessageId();
-        $response = $this->client->sendQuest("translate", array(
+        $param = array(
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt, 'translate', $ts),
             'salt' => $salt,
@@ -356,8 +356,12 @@ class RTMServerClient
             'src' => $src,
             'dst' => $dst,
             'type' => $type,
-            'profanity' => $profanity
-        ));
+            'profanity' => $profanity,
+            'postProfanity' => $postProfanity
+        );
+        if ($uid !== NULL)
+            $param['uid'] = $uid;
+        $response = $this->client->sendQuest("translate", $param);
         return [
             'source' => $response['source'],
             'target' => $response['target'],
@@ -366,24 +370,28 @@ class RTMServerClient
         ];
     }
 
-    public function profanity($text, $action = '') {
+    public function profanity($text, $classify = false, $uid = NULL) {
         $salt = $this->generateSalt();
         $ts = time();
         $mid = $this->generateMessageId();
-        $response = $this->client->sendQuest("profanity", array(
+        $param = array(
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt, 'profanity', $ts),
             'salt' => $salt,
             'ts' => $ts,
             'text' => $text,
-            'action' => $action
-        ));
-        return [
-            'text' => $response['text']
-        ];
+            'classify' => $classify,
+        );
+        if ($uid !== NULL)
+            $param['uid'] = $uid;
+        $response = $this->client->sendQuest("profanity", $param);
+        $result = array('text' => $response['text']);
+        if (isset($response['classification']))
+           $result['classification'] = $response['classification']; 
+        return $result; 
     }
 
-    public function transcribe($audio, $lang, $action = NULL) {
+    public function transcribe($audio, $lang, $uid = NULL, $codec = NULL, $srate = 16000) {
         $salt = $this->generateSalt();
         $ts = time();
         $mid = $this->generateMessageId();
@@ -393,10 +401,13 @@ class RTMServerClient
             'salt' => $salt,
             'ts' => $ts,
             'audio' => $audio,
-            'lang' => $lang
+            'lang' => $lang,
+            'srate' => $srate,
         );
-        if ($action !== NULL)
-            $params['action'] = $action;
+        if ($uid !== NULL)
+            $params['uid'] = $uid;
+        if ($codec !== NULL)
+            $params['codec'] = $codec;
         $response = $this->client->sendQuest("transcribe", $params);
         return [
             'text' => $response['text'],
@@ -690,9 +701,6 @@ class RTMServerClient
 
 	public function setGroupInfo($gid, $oinfo = NULL, $pinfo = NULL)
     {
-        if ($oinfo === NULL && $pinfo === NULL)
-            return false;
-
         $salt = $this->generateSalt();
         $ts = time();
         $params = array(
@@ -707,7 +715,6 @@ class RTMServerClient
         if ($pinfo !== NULL)
             $params['pinfo'] = $pinfo;
         $res = $this->client->sendQuest("setgroupinfo", $params);
-        return true;
     }
 
 	public function getGroupInfo($gid) 
@@ -721,16 +728,7 @@ class RTMServerClient
             'ts' => $ts,
             'gid' => $gid
         ));
-
-        if (!is_array($res))
-            return array();
-
-        $info = array();
-        if (isset($res['oinfo']))
-            $info['oinfo'] = $res['oinfo'];
-        if (isset($res['pinfo']))
-            $info['pinfo'] = $res['pinfo'];
-        return $info;
+		return array('oinfo' => $res['oinfo'], 'pinfo' => $res['pinfo']);
 	}
 
     public function isBanOfRoom($rid, $uid)
@@ -750,9 +748,6 @@ class RTMServerClient
 
 	public function setRoomInfo($rid, $oinfo = NULL, $pinfo = NULL)
     {
-        if ($oinfo === NULL && $pinfo === NULL)
-            return false;
-
         $salt = $this->generateSalt();
         $ts = time();
         $params = array(
@@ -767,7 +762,6 @@ class RTMServerClient
         if ($pinfo !== NULL)
             $params['pinfo'] = $pinfo;
         $res = $this->client->sendQuest("setroominfo", $params);
-        return true;
     }
 
 	public function getRoomInfo($rid) 
@@ -781,16 +775,7 @@ class RTMServerClient
             'ts' => $ts,
             'rid' => $rid
         ));
-        
-        if (!is_array($res))
-            return array();
-
-        $info = array();
-        if (isset($res['oinfo']))
-            $info['oinfo'] = $res['oinfo'];
-        if (isset($res['pinfo']))
-            $info['pinfo'] = $res['pinfo'];
-        return $info;
+		return array('oinfo' => $res['oinfo'], 'pinfo' => $res['pinfo']);
 	}
 
     public function isProjectBlack($uid)
@@ -809,9 +794,6 @@ class RTMServerClient
 
     public function setUserInfo($uid, $oinfo = NULL, $pinfo = NULL)
     {
-        if ($oinfo === NULL && $pinfo === NULL)
-            return false;
-
         $salt = $this->generateSalt();
         $ts = time();
         $params = array(
@@ -826,7 +808,6 @@ class RTMServerClient
         if ($pinfo !== NULL)
             $params['pinfo'] = $pinfo;
         $res = $this->client->sendQuest("setuserinfo", $params);
-        return true;
     }
 
 	public function getUserInfo($uid) 
@@ -840,16 +821,7 @@ class RTMServerClient
             'ts' => $ts,
             'uid' => $uid
         ));
-        
-        if (!is_array($res))
-            return array();
-
-        $info = array();
-        if (isset($res['oinfo']))
-            $info['oinfo'] = $res['oinfo'];
-        if (isset($res['pinfo']))
-            $info['pinfo'] = $res['pinfo'];
-        return $info;
+		return array('oinfo' => $res['oinfo'], 'pinfo' => $res['pinfo']);
 	}
 
 	public function getUserOpenInfo($uids) 
@@ -1091,7 +1063,7 @@ class RTMServerClient
     {
         $salt = $this->generateSalt();
         $ts = time();
-        $res = $this->client->sendQuest("getbroadcastmsg", array(
+        return $this->client->sendQuest("getbroadcastmsg", array(
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt, 'getbroadcastmsg', $ts),
             'salt' => $salt,
@@ -1253,7 +1225,7 @@ class RTMServerClient
     {
         $salt = $this->generateSalt();
         $ts = time();
-        $data = $this->client->sendQuest('dataget', [
+        return $this->client->sendQuest('dataget', [
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt, 'dataget', $ts),
             'salt' => $salt,
@@ -1261,9 +1233,6 @@ class RTMServerClient
             'uid' => (int)$uid,
             'key' => $key
         ]);
-        if (!is_array($data))
-            return array();
-        return $data; 
     }
 
     public function dataSet($uid, $key, $value)
