@@ -343,7 +343,7 @@ to the ```require``` section of your `composer.json` file.
 
 * `sendAudios($from, $tos, $msg, $attrs)`: 发送多人语音聊天消息
     * `from`: **(long)** 发送方 id
-    * `tos`: **(long)** 接收方uids
+    * `tos`: **(long[])** 接收方uids
     * `msg`: **(string)** 语音聊天内容
     * `attrs`: **(string)** 聊天消息附加信息, 可传`""`
     * 返回：
@@ -376,28 +376,30 @@ to the ```require``` section of your `composer.json` file.
       * `mtime`: 响应时间戳
       * `mid` : 聊天消息id
       
-* `translate($text, $dst, $src = '', $type = 'chat', $profanity = '')`: 翻译
+* `translate($text, $dst, $src = '', $type = 'chat', $profanity = '', $postProfanity = false, $uid = NULL)`: 翻译
     * `text`: **(string)**: 内容
     * `dst`: **(string)** 目标语言类型
     * `src`: **(string)** 原始语言类型
     * `type`: **(string)** 可选值为chat或mail。如未指定，则默认使用'chat'
     * `profanity`: **(string)** 敏感语过滤。设置为以下3项之一: off, stop, censor
+    * `postProfanity`: **(bool)** 是否把翻译后的文本过滤
     * 返回：
       * sourceText: 原始聊天消息
       * source：原始聊天消息语言类型（经过翻译系统检测的）
       * targetText：翻译后的聊天消息
       * target：翻译后的语言类型
 
-* `profanity($text, $action = '')`: 敏感词过滤
+* `profanity($text, $classify = false, $uid = NULL)`: 敏感词过滤
     * `text`: **(string)**: 内容
-    * `action`: **(string)** stop: 返回错误，censor: 用星号(*)替换敏感词
+    * `classify`: **(bool)** 是否进行文本分类检测
     * 返回：
       * text: 过滤后的聊天消息
       
-* `transcribe($audio, $lang, $action = '')`: 语音识别
+* `transcribe($audio, $lang, $uid = NULL, $codec = NULL, $srate = 16000)`: 语音识别
     * `audio`: **(string)**: 语音内容
     * `lang`: **(string)**: 语言
-    * `action`: **(string)** stop: 返回错误，censor: 用星号(*)替换敏感词
+    * `codec`: **(string)**: 编码类型，默认OPUS
+    * `srate`: **(int)**: 采样率，默认16000
     * 返回：
       * text: 过滤后的聊天消息
       * lang: 语言
