@@ -1093,6 +1093,22 @@ class RTMServerClient
         );
     }
 
+    public function getMessage($mid, $from, $xid, $type)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        return $this->client->sendQuest('getmsg', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'getmsg', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'mid' => (int)$mid,
+            'from' => (int)$from,
+            'xid' => (int)$xid,
+            'type' => $type 
+        ]);
+    }
+
     public function deleteP2PMessage($mid, $from, $to)
     {
         $salt = $this->generateSalt();

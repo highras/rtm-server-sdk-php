@@ -163,7 +163,13 @@ to the ```require``` section of your `composer.json` file.
     * `mtypes`: **([int])** mtype列表`
     * 返回：
       * `{ num:int16, lastId:int64, begin:int64, end:int64, msgs:list<BroadcastMsg> }`
-      
+ 
+ * `getMessage($mid, $from, $xid, $type)`: 删除P2P消息历史
+    * `mid`: **(long)**: 业务消息id
+    * `from`: **(long)** 发布者id
+    * `xid`: **(long)** to/gid/rid 
+    * `type`: **(int)** 1,p2p; 2,group; 3, room; 4, broadcast
+     
 * `deleteP2PMessage($mid, $from, $to)`: 删除P2P消息历史
     * `mid`: **(long)**: 业务消息id
     * `from`: **(long)** 发布者id
