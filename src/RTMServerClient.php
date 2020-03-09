@@ -1108,6 +1108,11 @@ class RTMServerClient
             'type' => $type 
         ]);
     }
+    
+    public function getChat($mid, $from, $xid, $type)
+    {
+        return getMessage($mid, $from, $xid, $type);
+    }
 
     public function deleteP2PMessage($mid, $from, $to)
     {
