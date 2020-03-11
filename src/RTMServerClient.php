@@ -1061,7 +1061,7 @@ class RTMServerClient
     {
         $salt = $this->generateSalt();
         $ts = time();
-        return $this->client->sendQuest("getbroadcastmsg", array(
+        $res = $this->client->sendQuest("getbroadcastmsg", array(
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt, 'getbroadcastmsg', $ts),
             'salt' => $salt,
