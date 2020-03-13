@@ -388,7 +388,7 @@ class RTMServerClient
         return $response;
     }
 
-    public function transcribe($audio, $lang, $uid = NULL, $codec = NULL, $srate = 16000) {
+    public function transcribe($audio, $uid = NULL) {
         $salt = $this->generateSalt();
         $ts = time();
         $mid = $this->generateMessageId();
@@ -398,13 +398,9 @@ class RTMServerClient
             'salt' => $salt,
             'ts' => $ts,
             'audio' => $audio,
-            'lang' => $lang,
-            'srate' => $srate,
         );
         if ($uid !== NULL)
             $params['uid'] = $uid;
-        if ($codec !== NULL)
-            $params['codec'] = $codec;
         $response = $this->client->sendQuest("transcribe", $params);
         return [
             'text' => $response['text'],

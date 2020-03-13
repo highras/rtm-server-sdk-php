@@ -401,11 +401,9 @@ to the ```require``` section of your `composer.json` file.
     * 返回：
       * text: 过滤后的聊天消息
       
-* `transcribe($audio, $lang, $uid = NULL, $codec = NULL, $srate = 16000)`: 语音识别
+* `transcribe($audio, $uid = NULL)`: 语音识别
     * `audio`: **(string)**: 语音内容
-    * `lang`: **(string)**: 语言
-    * `codec`: **(string)**: 编码类型，默认OPUS
-    * `srate`: **(int)**: 采样率，默认16000
+    * `uid`: **(int)**: 用户id 
     * 返回：
       * text: 过滤后的聊天消息
       * lang: 语言
