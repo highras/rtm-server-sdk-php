@@ -721,7 +721,8 @@ class RTMServerClient
             'ts' => $ts,
             'gid' => $gid
         ));
-		return array('oinfo' => $res['oinfo'], 'pinfo' => $res['pinfo']);
+
+		return array('oinfo' => isset($res['oinfo']) ? $res['oinfo'] : NULL, 'pinfo' => isset($res['pinfo']) ? $res['pinfo'] : NULL);
 	}
 
     public function isBanOfRoom($rid, $uid)
@@ -768,7 +769,7 @@ class RTMServerClient
             'ts' => $ts,
             'rid' => $rid
         ));
-		return array('oinfo' => $res['oinfo'], 'pinfo' => $res['pinfo']);
+        return array('oinfo' => isset($res['oinfo']) ? $res['oinfo'] : NULL, 'pinfo' => isset($res['pinfo']) ? $res['pinfo'] : NULL);
 	}
 
     public function isProjectBlack($uid)
@@ -814,7 +815,7 @@ class RTMServerClient
             'ts' => $ts,
             'uid' => $uid
         ));
-		return array('oinfo' => $res['oinfo'], 'pinfo' => $res['pinfo']);
+        return array('oinfo' => isset($res['oinfo']) ? $res['oinfo'] : NULL, 'pinfo' => isset($res['pinfo']) ? $res['pinfo'] : NULL);
 	}
 
 	public function getUserOpenInfo($uids) 
@@ -1056,7 +1057,7 @@ class RTMServerClient
     {
         $salt = $this->generateSalt();
         $ts = time();
-        return $this->client->sendQuest("getbroadcastmsg", array(
+        $res = $this->client->sendQuest("getbroadcastmsg", array(
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt, 'getbroadcastmsg', $ts),
             'salt' => $salt,
