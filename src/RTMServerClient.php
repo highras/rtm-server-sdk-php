@@ -1205,7 +1205,7 @@ class RTMServerClient
             'ts' => $ts,
             'uid' => (int)$uid,
             'apptype' => $appType,
-            'adddevice' => $deviceToken
+            'devicetoken' => $deviceToken
         ]);
     }
     
@@ -1219,7 +1219,7 @@ class RTMServerClient
             'salt' => $salt,
             'ts' => $ts,
             'uid' => (int)$uid,
-            'adddevice' => $deviceToken
+            'devicetoken' => $deviceToken
         ]);
     }
     
