@@ -239,7 +239,7 @@ class RTMServerClient
     
     public function sendAudio($from, $to, $msg, $attrs)
     {
-        return $this->sendMessage($from, $to, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
+        return $this->sendMessage($from, $to, RTM_AUDIO_MTYPE, $msg, $attrs); 
     }
     
     public function sendCmd($from, $to, $msg, $attrs)
@@ -254,7 +254,7 @@ class RTMServerClient
     
     public function sendAudios($from, $tos, $msg, $attrs)
     {
-        return $this->sendMessages($from, $tos, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
+        return $this->sendMessages($from, $tos, RTM_AUDIO_MTYPE, $msg, $attrs); 
     }
     
     public function sendCmds($from, $tos, $msg, $attrs)
@@ -269,7 +269,7 @@ class RTMServerClient
     
     public function sendGroupAudio($from, $gid, $msg, $attrs)
     {
-        return $this->sendGroupMessage($from, $gid, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
+        return $this->sendGroupMessage($from, $gid, RTM_AUDIO_MTYPE, $msg, $attrs); 
     }
     
     public function sendGroupCmd($from, $gid, $msg, $attrs)
@@ -284,7 +284,7 @@ class RTMServerClient
     
     public function sendRoomAudio($from, $rid, $msg, $attrs)
     {
-        return $this->sendRoomMessage($from, $rid, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
+        return $this->sendRoomMessage($from, $rid, RTM_AUDIO_MTYPE, $msg, $attrs); 
     }
     
     public function sendRoomCmd($from, $rid, $msg, $attrs)
@@ -299,7 +299,7 @@ class RTMServerClient
     
     public function broadcastAudio($from, $msg, $attrs)
     {
-        return $this->broadcastMessage($from, RTM_AUDIO_MTYPE, base64_encode($msg), $attrs); 
+        return $this->broadcastMessage($from, RTM_AUDIO_MTYPE, $msg, $attrs); 
     }
     
     public function broadcastCmd($from, $msg, $attrs)
