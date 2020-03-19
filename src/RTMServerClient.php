@@ -860,7 +860,7 @@ class RTMServerClient
         ));
     }
 
-    public function fileToken($from, $cmd, $to, $tos, $rid, $gid)
+    public function fileToken($from, $cmd, $to)
     {
         if (!in_array($cmd, array('sendfile', 'sendfiles', 'sendroomfile', 'sendgroupfile', 'broadcastfile')))
 			throw new \Exception('cmd not support');
@@ -879,11 +879,11 @@ class RTMServerClient
 		if ($cmd == 'sendfile')
 			$param['to'] = $to;
 		if ($cmd == 'sendfiles')
-			$param['tos'] = $tos;
+			$param['tos'] = $to;
 		if ($cmd == 'sendroomfile')
-			$param['rid'] = $rid;
+			$param['rid'] = $to;
 		if ($cmd == 'sendgroupfile')
-			$param['gid'] = $gid;
+			$param['gid'] = $to;
 		
         $answer = $this->client->sendQuest('filetoken', $param);
 		return $answer;
