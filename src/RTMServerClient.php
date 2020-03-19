@@ -860,6 +860,35 @@ class RTMServerClient
         ));
     }
 
+    public function fileToken($from, $cmd, $to, $tos, $rid, $gid)
+    {
+        if (!in_array($cmd, array('sendfile', 'sendfiles', 'sendroomfile', 'sendgroupfile', 'broadcastfile')))
+			throw new \Exception('cmd not support');
+        
+		$salt = $this->generateSalt();
+        $ts = time();
+        $sign = $this->generateSignature($salt, 'filetoken', $ts);
+        $param = array(
+            'pid' => $this->pid,
+            'sign' => $sign,
+            'salt' => $salt,
+            'ts' => $ts,
+			'from' => $from,
+            'cmd' => $cmd
+        );
+		if ($cmd == 'sendfile')
+			$param['to'] = $to;
+		if ($cmd == 'sendfiles')
+			$param['tos'] = $tos;
+		if ($cmd == 'sendroomfile')
+			$param['rid'] = $rid;
+		if ($cmd == 'sendgroupfile')
+			$param['gid'] = $gid;
+		
+        $answer = $this->client->sendQuest('filetoken', $param);
+		return $answer;
+    }
+
     public function sendFile($from, $to, $mtype, $file)
     {
         $salt = $this->generateSalt();
