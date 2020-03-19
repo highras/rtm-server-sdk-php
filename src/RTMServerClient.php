@@ -897,6 +897,158 @@ class RTMServerClient
             ])
         ]);
     }
+    
+    public function sendFiles($from, $tos, $mtype, $file)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $sign = $this->generateSignature($salt, 'filetoken', $ts);
+        $answer = $this->client->sendQuest('filetoken', [
+            'pid' => $this->pid,
+            'sign' => $sign,
+            'salt' => $salt,
+            'ts' => $ts,
+            'cmd' => 'sendfiles',
+            'from' => $from,
+            'tos' => $tos
+        ]);
+
+        $token = $answer["token"];
+        $endpoint = $answer["endpoint"];
+        $ipport = explode(":", $endpoint);
+
+        $ext = pathinfo($file, PATHINFO_EXTENSION);
+        $content = file_get_contents($file);
+        $sign = md5(md5($content) . ":" . $token);
+        $fileClient = new TCPClient($ipport[0], $ipport[1]);
+        $fileClient->sendQuest("sendfiles", [
+            'pid' => $this->pid,
+            'token' => $token,
+            'mtype' => $mtype,
+            'from' => $from,
+            'tos' => $tos,
+            'mid' => $this->generateMessageId(),
+            'file' => $content,
+            'attrs' => json_encode([
+                'sign' => $sign,
+                'ext' => $ext,
+            ])
+        ]);
+    }
+    
+    public function sendRoomFile($from, $rid, $mtype, $file)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $sign = $this->generateSignature($salt, 'filetoken', $ts);
+        $answer = $this->client->sendQuest('filetoken', [
+            'pid' => $this->pid,
+            'sign' => $sign,
+            'salt' => $salt,
+            'ts' => $ts,
+            'cmd' => 'sendroomfile',
+            'from' => $from,
+            'rid' => $rid
+        ]);
+
+        $token = $answer["token"];
+        $endpoint = $answer["endpoint"];
+        $ipport = explode(":", $endpoint);
+
+        $ext = pathinfo($file, PATHINFO_EXTENSION);
+        $content = file_get_contents($file);
+        $sign = md5(md5($content) . ":" . $token);
+        $fileClient = new TCPClient($ipport[0], $ipport[1]);
+        $fileClient->sendQuest("sendroomfile", [
+            'pid' => $this->pid,
+            'token' => $token,
+            'mtype' => $mtype,
+            'from' => $from,
+            'rid' => $rid,
+            'mid' => $this->generateMessageId(),
+            'file' => $content,
+            'attrs' => json_encode([
+                'sign' => $sign,
+                'ext' => $ext,
+            ])
+        ]);
+    }
+    
+    public function sendGroupFile($from, $gid, $mtype, $file)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $sign = $this->generateSignature($salt, 'filetoken', $ts);
+        $answer = $this->client->sendQuest('filetoken', [
+            'pid' => $this->pid,
+            'sign' => $sign,
+            'salt' => $salt,
+            'ts' => $ts,
+            'cmd' => 'sendgroupfile',
+            'from' => $from,
+            'gid' => $gid
+        ]);
+
+        $token = $answer["token"];
+        $endpoint = $answer["endpoint"];
+        $ipport = explode(":", $endpoint);
+
+        $ext = pathinfo($file, PATHINFO_EXTENSION);
+        $content = file_get_contents($file);
+        $sign = md5(md5($content) . ":" . $token);
+        $fileClient = new TCPClient($ipport[0], $ipport[1]);
+        $fileClient->sendQuest("sendgroupfile", [
+            'pid' => $this->pid,
+            'token' => $token,
+            'mtype' => $mtype,
+            'from' => $from,
+            'gid' => $gid,
+            'mid' => $this->generateMessageId(),
+            'file' => $content,
+            'attrs' => json_encode([
+                'sign' => $sign,
+                'ext' => $ext,
+            ])
+        ]);
+    }
+    
+    public function broadcastFile($from, $mtype, $file)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $sign = $this->generateSignature($salt, 'filetoken', $ts);
+        $answer = $this->client->sendQuest('filetoken', [
+            'pid' => $this->pid,
+            'sign' => $sign,
+            'salt' => $salt,
+            'ts' => $ts,
+            'cmd' => 'broadcastfile',
+            'from' => $from
+        ]);
+
+        $token = $answer["token"];
+        $endpoint = $answer["endpoint"];
+        $ipport = explode(":", $endpoint);
+
+        $ext = pathinfo($file, PATHINFO_EXTENSION);
+        $content = file_get_contents($file);
+        $sign = md5(md5($content) . ":" . $token);
+        $fileClient = new TCPClient($ipport[0], $ipport[1]);
+        $fileClient->sendQuest("broadcastfile", [
+            'pid' => $this->pid,
+            'token' => $token,
+            'mtype' => $mtype,
+            'from' => $from,
+            'mid' => $this->generateMessageId(),
+            'file' => $content,
+            'attrs' => json_encode([
+                'sign' => $sign,
+                'ext' => $ext,
+            ])
+        ]);
+    }
+
+
 
     /**
      * @param int $uid
