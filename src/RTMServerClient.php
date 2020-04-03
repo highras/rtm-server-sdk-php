@@ -312,19 +312,19 @@ class RTMServerClient
         return $this->getP2PMessage($uid, $ouid, $num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE, RTM_CMD_MTYPE));
     }
     
-    public function getGroupChat($gid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)
+    public function getGroupChat($uid, $gid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)
     {
-        return $this->getGroupMessage($gid, $num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE));
+        return $this->getGroupMessage($uid, $gid, $num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE));
     }
     
-    public function getRoomChat($rid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)
+    public function getRoomChat($uid, $rid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)
     {
-        return $this->getRoomMessage($rid, $num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE));
+        return $this->getRoomMessage($uid, $rid, $num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE));
     }
     
-    public function getBroadcastChat($num, $desc, $begin = 0, $end = 0, $lastId = 0)
+    public function getBroadcastChat($uid, $num, $desc, $begin = 0, $end = 0, $lastId = 0)
     {
-        return $this->getBroadcastMessage($num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE)); 
+        return $this->getBroadcastMessage($uid, $num, $desc, $begin, $end, $lastId, array(RTM_CHAT_MTYPE, RTM_AUDIO_MTYPE)); 
     }
     
     public function deleteP2PChat($mid, $from, $to) {
@@ -388,7 +388,7 @@ class RTMServerClient
         return $response;
     }
 
-    public function transcribe($audio, $uid = NULL) {
+    public function transcribe($audio, $uid = NULL, $profanityFilter = false) {
         $salt = $this->generateSalt();
         $ts = time();
         $mid = $this->generateMessageId();
@@ -398,6 +398,7 @@ class RTMServerClient
             'salt' => $salt,
             'ts' => $ts,
             'audio' => $audio,
+            'profanityFilter' => $profanityFilter
         );
         if ($uid !== NULL)
             $params['uid'] = $uid;
@@ -1139,7 +1140,7 @@ class RTMServerClient
      * @return mixed
      * @throws \Exception
      */
-    public function getGroupMessage($gid, $num, $desc, $begin = 0, $end = 0, $lastId = 0, $mtypes = array())
+    public function getGroupMessage($uid, $gid, $num, $desc, $begin = 0, $end = 0, $lastId = 0, $mtypes = array())
     {
         $salt = $this->generateSalt();
         $ts = time();
@@ -1154,7 +1155,8 @@ class RTMServerClient
             'begin' => $begin,
             'end' => $end,
             'lastid' => $lastId,
-            'mtypes' => $mtypes
+            'mtypes' => $mtypes,
+            'uid' => $uid
         ));
         $msgs = array();
         foreach ($res['msgs'] as $v) {
@@ -1187,7 +1189,7 @@ class RTMServerClient
      * @return mixed
      * @throws \Exception
      */
-    public function getRoomMessage($rid, $num, $desc, $begin = 0, $end = 0, $lastId = 0, $mtypes = array())
+    public function getRoomMessage($uid, $rid, $num, $desc, $begin = 0, $end = 0, $lastId = 0, $mtypes = array())
     {
         $salt = $this->generateSalt();
         $ts = time();
@@ -1202,7 +1204,8 @@ class RTMServerClient
             'begin' => $begin,
             'end' => $end,
             'lastid' => $lastId,
-            'mtypes' => $mtypes
+            'mtypes' => $mtypes,
+            'uid' => $uid
         ));
         $msgs = array();
         foreach ($res['msgs'] as $v) {
@@ -1234,7 +1237,7 @@ class RTMServerClient
      * @return mixed
      * @throws \Exception
      */
-    public function getBroadcastMessage($num, $desc, $begin = 0, $end = 0, $lastId = 0, $mtypes = array())
+    public function getBroadcastMessage($uid, $num, $desc, $begin = 0, $end = 0, $lastId = 0, $mtypes = array())
     {
         $salt = $this->generateSalt();
         $ts = time();
@@ -1248,7 +1251,8 @@ class RTMServerClient
             'begin' => $begin,
             'end' => $end,
             'lastid' => $lastId,
-            'mtypes' => $mtypes
+            'mtypes' => $mtypes,
+            'uid' => $uid
         ));
         $msgs = array();
         foreach ($res['msgs'] as $v) {
