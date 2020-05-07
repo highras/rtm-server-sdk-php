@@ -388,7 +388,36 @@ class RTMServerClient
         return $response;
     }
 
+    private function getTranscribeCache($audio) {
+        $result = array('text' => '', 'lang' => '');
+        if (strlen($audio) < 8)
+            return $result;
+        $arr = unpack("Cver/Ccont/Ccodt/Cnum/Vlength", substr($audio, 0, 8));
+        $infoDataCount = $arr['num'];
+        $sectionLength = $arr['length'];
+        if ($infoDataCount == 0)
+            return $result;
+        if ($sectionLength + 8 >= strlen($audio))
+            return $result;
+        $payload = substr($audio, 8, $sectionLength);
+        $section = msgpack_unpack($payload);
+        if ($section) {
+            $result['text'] = $section['rtext'];
+            $result['lang'] = $section['rlang'];
+        }
+        return $result;
+    }
+
     public function transcribe($audio, $uid = NULL, $profanityFilter = false) {
+        $cacheResult = $this->getTranscribeCache($audio);
+        if (!empty($cacheResult['text']) && !empty($cacheResult['lang'])) {
+            if ($profanityFilter) {
+                $profanityResult = $this->profanity($cacheResult['text'], false, $uid);
+                $cacheResult['text'] = $profanityResult['text'];
+            }
+            return $cacheResult;
+        }
+
         $salt = $this->generateSalt();
         $ts = time();
         $mid = $this->generateMessageId();
