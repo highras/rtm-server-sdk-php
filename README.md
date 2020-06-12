@@ -481,6 +481,30 @@ to the ```require``` section of your `composer.json` file.
     * 返回：
       * array(uid)
 
+* `addBlacks($uid, $blacks)`: 拉黑用户，每次最多添加100人，拉黑后对方不能给自己发消息，自己可以给对方发，双方能正常获取session及历史消息
+    * `uid`: **(long)** 用户 id
+    * `blacks`: **(long[])** 多个用户 id
+
+* `delBlacks($uid, $blacks)`: 解除拉黑，每次最多解除100人
+    * `uid`: **(long)** 用户 id
+    * `blacks`: **(long[])** 多个用户 id
+    
+* `getBlacks($uid)`: 获取被我(uid)拉黑的用户列表
+    * `uid`: **(long)** 用户 id
+    * 返回：
+      * array(uid)
+      
+* `isBlack($uid, $buid)`: 判断拉黑关系，uid是否被buid的用户拉黑，用在发送单人消息的时候
+    * `uid`: **(long)** 用户 id
+    * `buid`: **(long)** 另一个用户 id
+    * 返回：
+      * bool 
+    
+* `isBlacks($uid, $buids)`: 判断拉黑关系，每次最多获取100人的好友关系，uid是否被buids中的用户拉黑，用在发送多人消息的时候
+    * `uid`: **(long)** 用户 id
+    * 返回：
+      * array(buids)
+
 ### 群组操作相关
 
 * `addGroupMembers($gid, $uids)`: 添加组成员
