@@ -510,6 +510,78 @@ class RTMServerClient
         return isset($res['fuids']) ? $res['fuids'] : array();
     }
 
+    public function addBlacks($uid, $blacks)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $this->client->sendQuest("addblacks", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'addblacks', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'uid' => $uid,
+            'blacks' => $blacks
+        ));
+    }
+
+    public function delBlacks($uid, $blacks)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $this->client->sendQuest("delblacks", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'delblacks', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'uid' => $uid,
+            'blacks' => $blacks
+        ));
+    }
+
+    public function getBlacks($uid)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $res = $this->client->sendQuest("getblacks", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'getblacks', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'uid' => $uid
+        ));
+        return isset($res['uids']) ? $res['uids'] : array();
+    }
+
+    public function isBlack($uid, $buid)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $res = $this->client->sendQuest("isblack", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'isblack', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'uid' => $uid,
+            'buid' => $buid
+        ));
+        return isset($res['ok']) && ($res['ok'] == true);
+    }
+
+    public function isBlacks($uid, $buids)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $res = $this->client->sendQuest("isblacks", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'isblacks', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'uid' => $uid,
+            'buids' => $buids
+        ));
+        return isset($res['buids']) ? $res['buids'] : array();
+    }
+
     public function addGroupMembers($gid, $uids)
     {
         $salt = $this->generateSalt();
