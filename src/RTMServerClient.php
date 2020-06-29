@@ -401,10 +401,10 @@ class RTMServerClient
             return $result;
         $payload = substr($audio, 8, $sectionLength);
         $section = msgpack_unpack($payload);
-        if ($section) {
+        if ($section && isset($section['rtext']))
             $result['text'] = $section['rtext'];
+        if ($section && isset($section['rlang']))
             $result['lang'] = $section['rlang'];
-        }
         return $result;
     }
 
