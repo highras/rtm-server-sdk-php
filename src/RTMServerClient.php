@@ -4,8 +4,8 @@ namespace highras\rtm;
 
 use highras\fpnn\TCPClient;
 
-define("RTM_SDK_VERSION", "1.0.1");
-define("RTM_API_VERSION", "2.1.0");
+define("RTM_SDK_VERSION", "1.0.2");
+define("RTM_API_VERSION", "2.2.0");
 
 define("RTM_CHAT_MTYPE", 30);
 define("RTM_AUDIO_MTYPE", 31);
@@ -16,36 +16,45 @@ define("DELETE_MSG_TYPE_GROUP", 2);
 define("DELETE_MSG_TYPE_ROOM", 3);
 define("DELETE_MSG_TYPE_BROADCAST", 4);
 
+class AudioInfo {
+    public $sourceLanguage;
+    public $recognizedLanguage;
+    public $recognizedText;
+    public $duration;
+}
 
 class CommonMsg 
 {
     public $id;
-    public $from;
     public $mtype;
     public $mid;
     public $msg;
     public $attrs;
     public $mtime;
+    public $audioInfo;
+
+   function __construct() { $audioInfo = NULL; } 
 }
 
-class GroupMsg extends CommonMsg  {}
-class RoomMsg extends CommonMsg {}
-class BroadcastMsg extends CommonMsg {}
+class GroupMsg extends CommonMsg  {
+    public $from;
+}
 
-class P2PMsg
-{
-    public $id;
+class RoomMsg extends CommonMsg {
+    public $from;
+}
+
+class BroadcastMsg extends CommonMsg {
+    public $from;
+}
+
+class P2PMsg extends CommonMsg {
     public $direction;
-    public $mtype;
-    public $mid;
-    public $msg;
-    public $attrs;
-    public $mtime;
 }
 
 class RTMServerClient
 {
-    private $client = null;
+    private $client = NULL;
     private $pid;
     private $secretKey;
     private $midSeq = 0;
@@ -346,7 +355,7 @@ class RTMServerClient
         return $this->deleteBroadcastMessage($mid, $from);
     }
     
-    public function translate($text, $dst, $src = '', $type = 'chat', $profanity = '', $postProfanity = false, $uid = NULL) {
+    public function translate($text, $dst, $src = '', $type = 'chat', $profanity = 'off', $uid = NULL) {
         $salt = $this->generateSalt();
         $ts = time();
         $mid = $this->generateMessageId();
@@ -360,7 +369,6 @@ class RTMServerClient
             'dst' => $dst,
             'type' => $type,
             'profanity' => $profanity,
-            'postProfanity' => $postProfanity
         );
         if ($uid !== NULL)
             $param['uid'] = $uid;
@@ -423,7 +431,6 @@ class RTMServerClient
 
         $salt = $this->generateSalt();
         $ts = time();
-        $mid = $this->generateMessageId();
         $params = array(
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt, 'transcribe', $ts),
@@ -439,6 +446,28 @@ class RTMServerClient
             'text' => $response['text'],
             'lang' => $response['lang']
         ];
+    }
+
+    public function transcribeMessage($from, $mid, $toId, $type, $profanityFilter = false)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $params = array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'stranscribe', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'from' => $from,
+            'mid' => $mid,
+            'xid' => $toId,
+            'type' => $type,
+            'profanityFilter' => $profanityFilter
+        );
+        $response = $this->client->sendQuest("stranscribe", $params);
+         return [
+             'text' => $response['text'],
+             'lang' => $response['lang']
+         ];
     }
 
     public function addFriends($uid, $friends)
@@ -1182,7 +1211,17 @@ class RTMServerClient
         ]);
     }
 
-
+    private function buildAudioInfo($msg) {
+        $audioJson = json_decode($msg, true);
+        if ($audioJson == NULL)
+            return NULL; 
+        $audioInfo = new AudioInfo();
+        $audioInfo->sourceLanguage = isset($audioJson['sl']) ? $audioJson['sl'] : ''; 
+        $audioInfo->recognizedLanguage = isset($audioJson['rl']) ? $audioJson['rl'] : ''; 
+        $audioInfo->duration = isset($audioJson['du']) ? (int)$audioJson['du'] : 0;
+        $audioInfo->recognizedText = isset($audioJson['rt']) ? $audioJson['rt'] : '';
+        return $audioInfo; 
+    }
 
     /**
      * @param int $uid
@@ -1217,12 +1256,18 @@ class RTMServerClient
         foreach ($res['msgs'] as $v) {
             $msgStruct = new P2PMsg();
             $msgStruct->id = (int)$v[0];
-            $msgStruct->direction = (bool)$v[1];
+            $msgStruct->direction = $v[1];
             $msgStruct->mtype = (int)$v[2];
             $msgStruct->mid = (int)$v[3];
             $msgStruct->msg = $v[5];
             $msgStruct->attrs = $v[6];
             $msgStruct->mtime = (int)$v[7];
+
+            if ($msgStruct->mtype == RTM_AUDIO_MTYPE) {
+                $msgStruct->audioInfo = $this->buildAudioInfo($msgStruct->msg); 
+                $msgStruct->msg = "";
+            }
+
             $msgs[] = $msgStruct;
         }
         return array(
@@ -1272,6 +1317,12 @@ class RTMServerClient
             $msgStruct->msg = $v[5];
             $msgStruct->attrs = $v[6];
             $msgStruct->mtime = (int)$v[7];
+            
+            if ($msgStruct->mtype == RTM_AUDIO_MTYPE) {
+                $msgStruct->audioInfo = $this->buildAudioInfo($msgStruct->msg); 
+                $msgStruct->msg = "";
+            }
+
             $msgs[] = $msgStruct;
         }
         return array(
@@ -1321,6 +1372,12 @@ class RTMServerClient
             $msgStruct->msg = $v[5];
             $msgStruct->attrs = $v[6];
             $msgStruct->mtime = (int)$v[7];
+            
+            if ($msgStruct->mtype == RTM_AUDIO_MTYPE) {
+                $msgStruct->audioInfo = $this->buildAudioInfo($msgStruct->msg); 
+                $msgStruct->msg = "";
+            }
+
             $msgs[] = $msgStruct;
         }
         return array(
@@ -1368,6 +1425,12 @@ class RTMServerClient
             $msgStruct->msg = $v[5];
             $msgStruct->attrs = $v[6];
             $msgStruct->mtime = (int)$v[7];
+            
+            if ($msgStruct->mtype == RTM_AUDIO_MTYPE) {
+                $msgStruct->audioInfo = $this->buildAudioInfo($msgStruct->msg); 
+                $msgStruct->msg = "";
+            }
+
             $msgs[] = $msgStruct;
         }
         return array(
