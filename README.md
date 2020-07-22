@@ -385,13 +385,12 @@ to the ```require``` section of your `composer.json` file.
       * `mtime`: 响应时间戳
       * `mid` : 聊天消息id
       
-* `translate($text, $dst, $src = '', $type = 'chat', $profanity = '', $postProfanity = false, $uid = NULL)`: 翻译
+* `translate($text, $dst, $src = '', $type = 'chat', $profanity = 'off', $uid = NULL)`: 翻译
     * `text`: **(string)**: 内容
     * `dst`: **(string)** 目标语言类型
     * `src`: **(string)** 原始语言类型
     * `type`: **(string)** 可选值为chat或mail。如未指定，则默认使用'chat'
     * `profanity`: **(string)** 敏感语过滤。设置为以下3项之一: off, stop, censor
-    * `postProfanity`: **(bool)** 是否把翻译后的文本过滤
     * 返回：
       * sourceText: 原始聊天消息
       * source：原始聊天消息语言类型（经过翻译系统检测的）
@@ -404,9 +403,20 @@ to the ```require``` section of your `composer.json` file.
     * 返回：
       * text: 过滤后的聊天消息
       
-* `transcribe($audio, $uid = NULL)`: 语音识别
+* `transcribe($audio, $uid = NULL, $profanityFilter = false)`: 语音识别
     * `audio`: **(string)**: 语音内容
     * `uid`: **(int)**: 用户id 
+    * `profanityFilter`: **(bool)**: 是否对结果进行敏感词过滤
+    * 返回：
+      * text: 过滤后的聊天消息
+      * lang: 语言
+      
+* `transcribeMessage($from, $mid, $toId, $type, $profanityFilter = false)`: 语音识别
+    * `from`: **(int)**: 发送者uid
+    * `mid`: **(int)**: 消息id 
+    * `toId`: **(int)**: rid/gid/to/0
+    * `type`: **(int)**: 1,p2p; 2,group; 3, room; 4, broadcast
+    * `profanityFilter`: **(bool)**: 是否对结果进行敏感词过滤
     * 返回：
       * text: 过滤后的聊天消息
       * lang: 语言
