@@ -1210,7 +1210,7 @@ class RTMServerClient
 
     public function sendGroupAudioFile($from, $gid, $file)
     {
-        return $this->sendRoomFile($from, $gid, RTM_FILE_MTYPE_AUDIO, $file);
+        return $this->sendGroupFile($from, $gid, RTM_FILE_MTYPE_AUDIO, $file);
     }
     
     public function sendGroupFile($from, $gid, $mtype, $file)
