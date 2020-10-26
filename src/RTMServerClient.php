@@ -1052,9 +1052,19 @@ class RTMServerClient
 		return $answer;
     }
 
+    public function sendImageFile($from, $to, $file)
+    {
+        return $this->sendFile($from, $to, RTM_FILE_MTYPE_IMAGE, $file);
+    }
+
     public function sendAudioFile($from, $to, $file)
     {
         return $this->sendFile($from, $to, RTM_FILE_MTYPE_AUDIO, $file);
+    }
+
+    public function sendVideoFile($from, $to, $file)
+    {
+        return $this->sendFile($from, $to, RTM_FILE_MTYPE_VIDEO, $file);
     }
 
     public function sendFile($from, $to, $mtype, $file)

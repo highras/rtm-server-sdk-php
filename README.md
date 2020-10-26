@@ -341,10 +341,26 @@ to the ```require``` section of your `composer.json` file.
     * `mid`: **(long)**: Message ID 
     * `from`: **(long)** User ID of sender
     
+* `sendImageFile($from, $to, $file)`: Send image file
+    * `from`: **(long)** User ID of sender
+    * `to`: **(long)** User ID of reciever
+    * `file`: **(string)** Image file
+    * return:
+      * `mtime`: Response timestamp
+      * `mid` : Message ID
+
 * `sendAudioFile($from, $to, $file)`: Send audio file
     * `from`: **(long)** User ID of sender
     * `to`: **(long)** User ID of reciever
     * `file`: **(string)** Audio file
+    * return:
+      * `mtime`: Response timestamp
+      * `mid` : Message ID
+
+* `sendVideoFile($from, $to, $file)`: Send video file
+    * `from`: **(long)** User ID of sender
+    * `to`: **(long)** User ID of reciever
+    * `file`: **(string)** Video file
     * return:
       * `mtime`: Response timestamp
       * `mid` : Message ID
