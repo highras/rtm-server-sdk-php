@@ -1579,7 +1579,10 @@ class RTMServerClient
             'type' => $type 
         ]);
 
-        if (in_array($result['mtype'], array(RTM_FILE_MTYPE_DEFAULT, RTM_FILE_MTYPE_IMAGE, RTM_FILE_MTYPE_AUDIO, RTM_FILE_MTYPE_VIDEO))) {
+        if (empty($result))
+            return $result;
+
+        if (isset($result['mtype']) && in_array($result['mtype'], array(RTM_FILE_MTYPE_DEFAULT, RTM_FILE_MTYPE_IMAGE, RTM_FILE_MTYPE_AUDIO, RTM_FILE_MTYPE_VIDEO))) {
             $fileMsgArray = json_decode($result['msg'], true);
             if ($fileMsgArray) {
                 $result['fileInfo'] = new FileInfo();
