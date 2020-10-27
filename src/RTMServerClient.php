@@ -1052,21 +1052,6 @@ class RTMServerClient
 		return $answer;
     }
 
-    public function sendImageFile($from, $to, $file)
-    {
-        return $this->sendFile($from, $to, RTM_FILE_MTYPE_IMAGE, $file);
-    }
-
-    public function sendAudioFile($from, $to, $file)
-    {
-        return $this->sendFile($from, $to, RTM_FILE_MTYPE_AUDIO, $file);
-    }
-
-    public function sendVideoFile($from, $to, $file)
-    {
-        return $this->sendFile($from, $to, RTM_FILE_MTYPE_VIDEO, $file);
-    }
-
     public function sendFile($from, $to, $mtype, $file)
     {
         $salt = $this->generateSalt();
@@ -1112,11 +1097,6 @@ class RTMServerClient
             'mtime' => $response['mtime'],
             'mid' => $mid,
         ];
-    }
-
-    public function sendAudioFiles($from, $tos, $file)
-    {
-        return $this->sendFiles($from, $tos, RTM_FILE_MTYPE_AUDIO, $file);
     }
     
     public function sendFiles($from, $tos, $mtype, $file)
@@ -1166,11 +1146,6 @@ class RTMServerClient
         ];
     }
     
-    public function sendRoomAudioFile($from, $rid, $file)
-    {
-        return $this->sendRoomFile($from, $rid, RTM_FILE_MTYPE_AUDIO, $file);
-    }
-
     public function sendRoomFile($from, $rid, $mtype, $file)
     {
         $salt = $this->generateSalt();
@@ -1216,11 +1191,6 @@ class RTMServerClient
             'mtime' => $response['mtime'],
             'mid' => $mid,
         ];
-    }
-
-    public function sendGroupAudioFile($from, $gid, $file)
-    {
-        return $this->sendGroupFile($from, $gid, RTM_FILE_MTYPE_AUDIO, $file);
     }
     
     public function sendGroupFile($from, $gid, $mtype, $file)
@@ -1268,11 +1238,6 @@ class RTMServerClient
             'mtime' => $response['mtime'],
             'mid' => $mid,
         ];
-    }
-
-    public function broadcastAudioFile($from, $file)
-    {
-        return $this->broadcastFile($from, RTM_FILE_MTYPE_AUDIO, $file);
     }
     
     public function broadcastFile($from, $mtype, $file)
