@@ -22,8 +22,13 @@ define("DELETE_MSG_TYPE_BROADCAST", 4);
 
 class FileInfo {
     public $url;
-    public $size;
+    public $fileSize;
     public $surl;
+    public $lang;
+    public $duration;
+    public $isRTMAudio;
+
+    public function __construct() { $this->isRTMAudio = false; } 
 }
 
 class CommonMsg 
@@ -36,7 +41,7 @@ class CommonMsg
     public $mtime;
     public $fileInfo;
 
-   function __construct() { $fileInfo = NULL; } 
+    public function __construct() { $this->fileInfo = NULL; } 
 }
 
 class GroupMsg extends CommonMsg  {
@@ -1052,7 +1057,7 @@ class RTMServerClient
 		return $answer;
     }
 
-    public function sendFile($from, $to, $mtype, $file)
+    public function sendFile($from, $to, $mtype, $file, $attrs = array())
     {
         $salt = $this->generateSalt();
         $ts = time();
@@ -1077,6 +1082,17 @@ class RTMServerClient
         $sign = md5(md5($content) . ":" . $token);
         $fileClient = new TCPClient($ipport[0], $ipport[1]);
         $mid = $this->generateMessageId();
+
+        $fileAttrs = array(
+                "rtm" => array(
+                    'sign' => $sign,
+                    'ext' => $ext,
+                    'filename' => $fileName
+                )
+            );
+        if (!empty($attrs))
+            $fileAttrs["custom"] = $attrs;
+
         $response = $fileClient->sendQuest("sendfile", [
             'pid' => $this->pid,
             'token' => $token,
@@ -1085,13 +1101,7 @@ class RTMServerClient
             'to' => $to,
             'mid' => $mid,
             'file' => $content,
-            'attrs' => json_encode(array(
-                "rtm" => array(
-                    'sign' => $sign,
-                    'ext' => $ext,
-                    'filename' => $fileName
-                )
-            ))
+            'attrs' => json_encode($fileAttrs)
         ]);
         return [
             'mtime' => $response['mtime'],
@@ -1099,7 +1109,7 @@ class RTMServerClient
         ];
     }
     
-    public function sendFiles($from, $tos, $mtype, $file)
+    public function sendFiles($from, $tos, $mtype, $file, $attrs = array())
     {
         $salt = $this->generateSalt();
         $ts = time();
@@ -1124,6 +1134,17 @@ class RTMServerClient
         $sign = md5(md5($content) . ":" . $token);
         $fileClient = new TCPClient($ipport[0], $ipport[1]);
         $mid = $this->generateMessageId();
+
+        $fileAttrs = array(
+            "rtm" => array(
+                'sign' => $sign,
+                'ext' => $ext,
+                'filename' => $fileName
+            )
+        );
+        if (!empty($attrs))
+            $fileAttrs["custom"] = $attrs;
+
         $response = $fileClient->sendQuest("sendfiles", [
             'pid' => $this->pid,
             'token' => $token,
@@ -1132,13 +1153,7 @@ class RTMServerClient
             'tos' => $tos,
             'mid' => $mid,
             'file' => $content,
-            'attrs' => json_encode(array(
-                "rtm" => array(
-                    'sign' => $sign,
-                    'ext' => $ext,
-                    'filename' => $fileName
-                )
-            ))
+            'attrs' => json_encode($fileAttrs)
         ]);
         return [
             'mtime' => $response['mtime'],
@@ -1146,7 +1161,7 @@ class RTMServerClient
         ];
     }
     
-    public function sendRoomFile($from, $rid, $mtype, $file)
+    public function sendRoomFile($from, $rid, $mtype, $file, $attrs = array())
     {
         $salt = $this->generateSalt();
         $ts = time();
@@ -1171,6 +1186,17 @@ class RTMServerClient
         $sign = md5(md5($content) . ":" . $token);
         $fileClient = new TCPClient($ipport[0], $ipport[1]);
         $mid = $this->generateMessageId();
+
+        $fileAttrs = array(
+            "rtm" => array(
+                'sign' => $sign,
+                'ext' => $ext,
+                'filename' => $fileName
+            )
+        );
+        if (!empty($attrs))
+            $fileAttrs["custom"] = $attrs;
+
         $response = $fileClient->sendQuest("sendroomfile", [
             'pid' => $this->pid,
             'token' => $token,
@@ -1179,13 +1205,7 @@ class RTMServerClient
             'rid' => $rid,
             'mid' => $mid,
             'file' => $content,
-            'attrs' => json_encode(array(
-                "rtm" => array(
-                    'sign' => $sign,
-                    'ext' => $ext,
-                    'filename' => $fileName
-                )
-            ))
+            'attrs' => json_encode($fileAttrs)
         ]);
         return [
             'mtime' => $response['mtime'],
@@ -1193,7 +1213,7 @@ class RTMServerClient
         ];
     }
     
-    public function sendGroupFile($from, $gid, $mtype, $file)
+    public function sendGroupFile($from, $gid, $mtype, $file, $attrs = array())
     {
         $salt = $this->generateSalt();
         $ts = time();
@@ -1218,6 +1238,17 @@ class RTMServerClient
         $sign = md5(md5($content) . ":" . $token);
         $fileClient = new TCPClient($ipport[0], $ipport[1]);
         $mid = $this->generateMessageId();
+
+        $fileAttrs = array(
+            "rtm" => array(
+                'sign' => $sign,
+                'ext' => $ext,
+                'filename' => $fileName
+            )
+        );
+        if (!empty($attrs))
+            $fileAttrs["custom"] = $attrs;
+
         $response = $fileClient->sendQuest("sendgroupfile", [
             'pid' => $this->pid,
             'token' => $token,
@@ -1226,13 +1257,7 @@ class RTMServerClient
             'gid' => $gid,
             'mid' => $mid,
             'file' => $content,
-            'attrs' => json_encode(array(
-                "rtm" => array(
-                    'sign' => $sign,
-                    'ext' => $ext,
-                    'filename' => $fileName
-                )
-            ))
+            'attrs' => json_encode($fileAttrs)
         ]);
         return [
             'mtime' => $response['mtime'],
@@ -1240,7 +1265,7 @@ class RTMServerClient
         ];
     }
     
-    public function broadcastFile($from, $mtype, $file)
+    public function broadcastFile($from, $mtype, $file, $attrs = array())
     {
         $salt = $this->generateSalt();
         $ts = time();
@@ -1264,6 +1289,17 @@ class RTMServerClient
         $sign = md5(md5($content) . ":" . $token);
         $fileClient = new TCPClient($ipport[0], $ipport[1]);
         $mid = $this->generateMessageId();
+
+        $fileAttrs = array(
+            "rtm" => array(
+                'sign' => $sign,
+                'ext' => $ext,
+                'filename' => $fileName
+            )
+        );
+        if (!empty($attrs))
+            $fileAttrs["custom"] = $attrs;
+
         $response = $fileClient->sendQuest("broadcastfile", [
             'pid' => $this->pid,
             'token' => $token,
@@ -1271,13 +1307,7 @@ class RTMServerClient
             'from' => $from,
             'mid' => $mid,
             'file' => $content,
-            'attrs' => json_encode(array(
-                "rtm" => array(
-                    'sign' => $sign,
-                    'ext' => $ext,
-                    'filename' => $fileName
-                )
-            ))
+            'attrs' => json_encode($fileAttrs)
         ]);
         return [
             'mtime' => $response['mtime'],
@@ -1295,6 +1325,31 @@ class RTMServerClient
         $audioInfo->duration = isset($audioJson['du']) ? (int)$audioJson['du'] : 0;
         $audioInfo->recognizedText = isset($audioJson['rt']) ? $audioJson['rt'] : '';
         return $audioInfo; 
+    }
+
+    private function buildFileInfo($mtype, $msg, &$attrs) {
+        $fileInfo = NULL;
+        if (in_array($mtype, array(RTM_FILE_MTYPE_DEFAULT, RTM_FILE_MTYPE_IMAGE, RTM_FILE_MTYPE_AUDIO, RTM_FILE_MTYPE_VIDEO))) {
+            $fileMsgArray = json_decode($msg, true);
+            if ($fileMsgArray) {
+                $fileInfo = new FileInfo();
+                $fileInfo->url = isset($fileMsgArray["url"]) ? $fileMsgArray["url"] : NULL;
+                $fileInfo->fileSize = isset($fileMsgArray["size"]) ? $fileMsgArray["size"] : 0;
+                if ($mtype == RTM_FILE_MTYPE_IMAGE)
+                    $fileInfo->surl = isset($fileMsgArray["surl"]) ? $fileMsgArray["surl"] : NULL;
+            }
+            $fileAttrsArray = json_decode($attrs, true);
+            if ($fileAttrsArray) {
+                if (isset($fileAttrsArray["rtm"]) && isset($fileAttrsArray["rtm"]["type"]) && $fileAttrsArray["rtm"]["type"] == "audiomsg") {
+                    $fileInfo->lang = isset($fileAttrsArray["rtm"]["lang"]) ? $fileAttrsArray["rtm"]["lang"] : NULL;
+                    $fileInfo->duration = isset($fileAttrsArray["rtm"]["duration"]) ? $fileAttrsArray["rtm"]["lang"] : 0;
+                    $fileInfo->isRTMAudio = true;
+                }
+                if (isset($fileAttrsArray["custom"]))
+                    $attrs = json_encode($fileAttrsArray["custom"]); 
+            }
+        }
+        return $fileInfo;
     }
 
     /**
@@ -1336,18 +1391,7 @@ class RTMServerClient
             $msgStruct->msg = $v[5];
             $msgStruct->attrs = $v[6];
             $msgStruct->mtime = (int)$v[7];
-
-            if (in_array($msgStruct->mtype, array(RTM_FILE_MTYPE_DEFAULT, RTM_FILE_MTYPE_IMAGE, RTM_FILE_MTYPE_AUDIO, RTM_FILE_MTYPE_VIDEO))) {
-                $fileMsgArray = json_decode($msgStruct->msg, true);
-                if ($fileMsgArray) {
-                    $msgStruct->fileInfo = new FileInfo();
-                    $msgStruct->fileInfo->url = isset($fileMsgArray["url"]) ? $fileMsgArray["url"] : NULL;
-                    $msgStruct->fileInfo->size = isset($fileMsgArray["size"]) ? $fileMsgArray["size"] : 0;
-                    if ($msgStruct->mtype == RTM_FILE_MTYPE_IMAGE)
-                    $msgStruct->fileInfo->surl = isset($fileMsgArray["surl"]) ? $fileMsgArray["surl"] : NULL;
-                }
-            }
-
+            $msgStruct->fileInfo = $this->buildFileInfo($msgStruct->mtype, $msgStruct->msg, $msgStruct->attrs);
             $msgs[] = $msgStruct;
         }
         return array(
@@ -1397,17 +1441,7 @@ class RTMServerClient
             $msgStruct->msg = $v[5];
             $msgStruct->attrs = $v[6];
             $msgStruct->mtime = (int)$v[7];
-
-            if (in_array($msgStruct->mtype, array(RTM_FILE_MTYPE_DEFAULT, RTM_FILE_MTYPE_IMAGE, RTM_FILE_MTYPE_AUDIO, RTM_FILE_MTYPE_VIDEO))) {
-                $fileMsgArray = json_decode($msgStruct->msg, true);
-                if ($fileMsgArray) {
-                    $msgStruct->fileInfo = new FileInfo();
-                    $msgStruct->fileInfo->url = isset($fileMsgArray["url"]) ? $fileMsgArray["url"] : NULL;
-                    $msgStruct->fileInfo->size = isset($fileMsgArray["size"]) ? $fileMsgArray["size"] : 0;
-                    if ($msgStruct->mtype == RTM_FILE_MTYPE_IMAGE)
-                    $msgStruct->fileInfo->surl = isset($fileMsgArray["surl"]) ? $fileMsgArray["surl"] : NULL;
-                }
-            }
+            $msgStruct->fileInfo = $this->buildFileInfo($msgStruct->mtype, $msgStruct->msg, $msgStruct->attrs);
             $msgs[] = $msgStruct;
         }
         return array(
@@ -1457,18 +1491,7 @@ class RTMServerClient
             $msgStruct->msg = $v[5];
             $msgStruct->attrs = $v[6];
             $msgStruct->mtime = (int)$v[7];
-
-            if (in_array($msgStruct->mtype, array(RTM_FILE_MTYPE_DEFAULT, RTM_FILE_MTYPE_IMAGE, RTM_FILE_MTYPE_AUDIO, RTM_FILE_MTYPE_VIDEO))) {
-                $fileMsgArray = json_decode($msgStruct->msg, true);
-                if ($fileMsgArray) {
-                    $msgStruct->fileInfo = new FileInfo();
-                    $msgStruct->fileInfo->url = isset($fileMsgArray["url"]) ? $fileMsgArray["url"] : NULL;
-                    $msgStruct->fileInfo->size = isset($fileMsgArray["size"]) ? $fileMsgArray["size"] : 0;
-                    if ($msgStruct->mtype == RTM_FILE_MTYPE_IMAGE)
-                    $msgStruct->fileInfo->surl = isset($fileMsgArray["surl"]) ? $fileMsgArray["surl"] : NULL;
-                }
-            }
-
+            $msgStruct->fileInfo = $this->buildFileInfo($msgStruct->mtype, $msgStruct->msg, $msgStruct->attrs);
             $msgs[] = $msgStruct;
         }
         return array(
@@ -1516,18 +1539,7 @@ class RTMServerClient
             $msgStruct->msg = $v[5];
             $msgStruct->attrs = $v[6];
             $msgStruct->mtime = (int)$v[7];
-
-            if (in_array($msgStruct->mtype, array(RTM_FILE_MTYPE_DEFAULT, RTM_FILE_MTYPE_IMAGE, RTM_FILE_MTYPE_AUDIO, RTM_FILE_MTYPE_VIDEO))) {
-                $fileMsgArray = json_decode($msgStruct->msg, true);
-                if ($fileMsgArray) {
-                    $msgStruct->fileInfo = new FileInfo();
-                    $msgStruct->fileInfo->url = isset($fileMsgArray["url"]) ? $fileMsgArray["url"] : NULL;
-                    $msgStruct->fileInfo->size = isset($fileMsgArray["size"]) ? $fileMsgArray["size"] : 0;
-                    if ($msgStruct->mtype == RTM_FILE_MTYPE_IMAGE)
-                    $msgStruct->fileInfo->surl = isset($fileMsgArray["surl"]) ? $fileMsgArray["surl"] : NULL;
-                }
-            }
-
+            $msgStruct->fileInfo = $this->buildFileInfo($msgStruct->mtype, $msgStruct->msg, $msgStruct->attrs);
             $msgs[] = $msgStruct;
         }
         return array(
@@ -1557,16 +1569,7 @@ class RTMServerClient
         if (empty($result))
             return $result;
 
-        if (isset($result['mtype']) && in_array($result['mtype'], array(RTM_FILE_MTYPE_DEFAULT, RTM_FILE_MTYPE_IMAGE, RTM_FILE_MTYPE_AUDIO, RTM_FILE_MTYPE_VIDEO))) {
-            $fileMsgArray = json_decode($result['msg'], true);
-            if ($fileMsgArray) {
-                $result['fileInfo'] = new FileInfo();
-                $result['fileInfo']->url = isset($fileMsgArray["url"]) ? $fileMsgArray["url"] : NULL;
-                $result['fileInfo']->size = isset($fileMsgArray["size"]) ? $fileMsgArray["size"] : 0;
-                if ($result['mtype'] == RTM_FILE_MTYPE_IMAGE)
-                $result['fileInfo']->surl = isset($fileMsgArray["surl"]) ? $fileMsgArray["surl"] : NULL;
-            }
-        }
+        $result['fileInfo'] = $this->buildFileInfo($result['mtype'], $result['msg'], $result['attrs']);
 
         return $result;
     }
