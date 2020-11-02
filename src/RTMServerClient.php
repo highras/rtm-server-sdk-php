@@ -4,7 +4,7 @@ namespace highras\rtm;
 
 use highras\fpnn\TCPClient;
 
-define("RTM_SDK_VERSION", "1.0.3");
+define("RTM_SDK_VERSION", "1.0.4");
 define("RTM_API_VERSION", "2.3.0");
 
 define("RTM_CHAT_MTYPE", 30);
