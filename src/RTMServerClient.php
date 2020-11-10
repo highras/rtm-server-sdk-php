@@ -4,7 +4,7 @@ namespace highras\rtm;
 
 use highras\fpnn\TCPClient;
 
-define("RTM_SDK_VERSION", "1.0.4");
+define("RTM_SDK_VERSION", "1.0.5");
 define("RTM_API_VERSION", "2.3.0");
 
 define("RTM_CHAT_MTYPE", 30);
@@ -1313,18 +1313,6 @@ class RTMServerClient
             'mtime' => $response['mtime'],
             'mid' => $mid,
         ];
-    }
-
-    private function buildAudioInfo($msg) {
-        $audioJson = json_decode($msg, true);
-        if ($audioJson == NULL)
-            return NULL; 
-        $audioInfo = new AudioInfo();
-        $audioInfo->sourceLanguage = isset($audioJson['sl']) ? $audioJson['sl'] : ''; 
-        $audioInfo->recognizedLanguage = isset($audioJson['rl']) ? $audioJson['rl'] : ''; 
-        $audioInfo->duration = isset($audioJson['du']) ? (int)$audioJson['du'] : 0;
-        $audioInfo->recognizedText = isset($audioJson['rt']) ? $audioJson['rt'] : '';
-        return $audioInfo; 
     }
 
     private function buildFileInfo($mtype, $msg, &$attrs) {
