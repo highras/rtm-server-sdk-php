@@ -13,8 +13,8 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "simplito/elliptic-php": "=1.0.6",
-        "highras/fpnn": "dev-master"
+        "simplito/elliptic-php": "^1.0.6",
+        "highras/fpnn": "^1.0.2"
     },
     "autoload": {
         "psr-4": {
