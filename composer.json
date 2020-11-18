@@ -11,7 +11,6 @@
             "email": "jianjun.zhao@funplus.com"
         }
     ],
-    "version": "dev-master",
     "require": {
         "php": ">=5.4.0",
         "simplito/elliptic-php": "=1.0.6",
