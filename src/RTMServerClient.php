@@ -4,8 +4,8 @@ namespace highras\rtm;
 
 use highras\fpnn\TCPClient;
 
-define("RTM_SDK_VERSION", "1.0.5");
-define("RTM_API_VERSION", "2.3.0");
+define("RTM_SDK_VERSION", "1.0.7");
+define("RTM_API_VERSION", "2.4.0");
 
 define("RTM_CHAT_MTYPE", 30);
 define("RTM_CMD_MTYPE", 32);
@@ -764,58 +764,66 @@ class RTMServerClient
     {
         $salt = $this->generateSalt();
         $ts = time();
-        $this->client->sendQuest("addgroupban", array(
+        $params = array(
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt, 'addgroupban', $ts),
             'salt' => $salt,
             'ts' => $ts,
-            'gid' => $gid,
             'uid' => $uid,
             'btime' => $btime
-        ));
+        );
+        if ($gid != NULL)
+            $params['gid'] = $gid;
+        $this->client->sendQuest("addgroupban", $params);
     }
 
     public function removeGroupBan($gid, $uid)
     {
         $salt = $this->generateSalt();
         $ts = time();
-        $this->client->sendQuest("removegroupban", array(
+        $params = array(
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt, 'removegroupban', $ts),
             'salt' => $salt,
             'ts' => $ts,
-            'gid' => $gid,
             'uid' => $uid
-        ));
+        );
+        if ($gid != NULL)
+            $params['gid'] = $gid;
+        $this->client->sendQuest("removegroupban", $params);
     }
 
     public function addRoomBan($rid, $uid, $btime)
     {
         $salt = $this->generateSalt();
         $ts = time();
-        $this->client->sendQuest("addroomban", array(
+        $params = array(
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt, 'addroomban', $ts),
             'salt' => $salt,
             'ts' => $ts,
-            'rid' => $rid,
             'uid' => $uid,
             'btime' => $btime
-        ));
+        );
+        if ($rid != NULL)
+            $params['rid'] = $rid;
+        $this->client->sendQuest("addroomban", $params);
     }
 
     public function removeRoomBan($rid, $uid)
     {
         $salt = $this->generateSalt();
         $ts = time();
-        $this->client->sendQuest("removeroomban", array(
+        $params = array(
             'pid' => $this->pid,
             'sign' => $this->generateSignature($salt, 'removeroomban', $ts),
             'salt' => $salt,
             'ts' => $ts,
-            'rid' => $rid,
             'uid' => $uid
-        ));
+        );
+        if ($rid != NULL)
+            $params['rid'] = $rid;
+        $this->client->sendQuest("removeroomban", $params);
     }
 
     public function addProjectBlack($uid, $btime)
@@ -1614,6 +1622,36 @@ class RTMServerClient
             'type' => DELETE_MSG_TYPE_ROOM 
         ]);
     }
+
+    public function getRoomMembers($rid)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $res = $this->client->sendQuest("getroommembers", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'getroommembers', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'rid' => $rid
+        ));
+        return isset($res['uids']) ? $res['uids'] : array();
+    }
+
+    public function getRoomCount($rid)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $res = $this->client->sendQuest("getroomcount", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'getroomcount', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'rid' => $rid
+        ));
+        return isset($res['cn']) ? $res['cn'] : 0;
+    }
+
+
     
     public function deleteBroadcastMessage($mid, $from)
     {

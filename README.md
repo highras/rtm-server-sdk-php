@@ -91,4 +91,6 @@ Please refer [Data Functions](doc/Data.md)
 
 ### Error Codes
 
-Please refer [Error Codes](https://github.com/highras/rtm-server-sdk-php/blob/master/src/RTMErrorCode.php)
+Please refer [RTM Error Codes](https://github.com/highras/rtm-server-sdk-php/blob/master/src/RTMErrorCode.php)
+
+Please refer [FPNN Error Codes](https://github.com/highras/fpnn-sdk-php/blob/master/src/ErrorCode.php)

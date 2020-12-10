@@ -28,12 +28,12 @@
       * array(gid)           
       
 * `addGroupBan($gid, $uid, $btime)`: Add group ban
-    * `gid`: **(long)** Group ID       
+    * `gid`: **(long)** Group ID, if NULL is set, all group is banned for this user
     * `uid`: **(long)** User ID   
     * `btime`: **(int)** Mute duration, starting from the current time, in seconds     
       
-* `removeGroupBan($gid, $uid)`: Cancel group ban
-    * `gid`: **(long)** Group ID       
+* `removeGroupBan($gid, $uid)`: Cancel group ban,
+    * `gid`: **(long)** Group ID, if NULL is set, all group is removed ban for this user
     * `uid`: **(long)** User ID        
     
 * `isBanOfGroup($gid, $uid)`: Check is group ban
