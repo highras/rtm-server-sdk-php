@@ -4,8 +4,8 @@ namespace highras\rtm;
 
 use highras\fpnn\TCPClient;
 
-define("RTM_SDK_VERSION", "1.0.7");
-define("RTM_API_VERSION", "2.4.0");
+define("RTM_SDK_VERSION", "1.0.8");
+define("RTM_API_VERSION", "2.5.0");
 
 define("RTM_CHAT_MTYPE", 30);
 define("RTM_CMD_MTYPE", 32);
@@ -1716,6 +1716,56 @@ class RTMServerClient
             'devicetoken' => $deviceToken
         ]);
     }
+
+    public function addDevicePushOption($uid, $type, $xid, $mtypes = null)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $params = array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'addoption', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'uid' => (int)$uid,
+            'type' => $type,
+            'xid' => (int)$xid
+        );
+        if ($mtypes != null)
+            $params['mtypes'] = $mtypes;
+        $this->client->sendQuest('addoption', $params);
+    }
+
+    public function removeDevicePushOption($uid, $type, $xid, $mtypes = null)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $params = array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'removeoption', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'uid' => (int)$uid,
+            'type' => $type,
+            'xid' => (int)$xid
+        );
+        if ($mtypes != null)
+            $params['mtypes'] = $mtypes;
+        $this->client->sendQuest('removeoption', $params);
+    }
+
+    public function getDevicePushOption($uid) 
+	{
+        $salt = $this->generateSalt();
+        $ts = time();
+        $res = $this->client->sendQuest("getoption", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'getoption', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'uid' => $uid
+        ));
+        return array('p2p' => isset($res['p2p']) ? $res['p2p'] : array(), 'group' => isset($res['group']) ? $res['group'] : array());
+	}
     
     public function removeToken($uid)
     {
