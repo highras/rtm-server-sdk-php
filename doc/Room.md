@@ -37,7 +37,7 @@
 * `getRoomMembers($rid)`: Get members of room
     * `rid`: **(long)** Room ID     
     * return:
-      * array(int64) Members user ID room
+      * array(int64) User ID list of room members
 
 * `getRoomCount($rid)`: Get room's members count
     * `rid`: **(long)** Room ID     
