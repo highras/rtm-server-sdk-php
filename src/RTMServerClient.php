@@ -1764,7 +1764,7 @@ class RTMServerClient
             'ts' => $ts,
             'uid' => $uid
         ));
-        return array('p2p' => isset($res['p2p']) ? $res['p2p'] : array(), 'group' => isset($res['group']) ? $res['group'] : array());
+        return array('p2p' => isset($res['p2p']) ? (array)$res['p2p'] : array(), 'group' => isset($res['group']) ? (array)$res['group'] : array());
 	}
     
     public function removeToken($uid)
