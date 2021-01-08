@@ -118,3 +118,12 @@
     * `mid`: **(long)**: Message ID
     * `from`: **(long)** User ID of sender
 
+* `getMessageNum($type, $xid, $mtypes = NULL, $begin = NULL, $end = NULL)`: Get message num
+    * `type`: **(int)**: 2: group, 3: room
+    * `xid`: **(long)** Group ID or Room ID
+    * `mtypes`: **(array(int))** mtype list default is NULL
+    * `begin`: **(long)** begin timestamp in milliseconds, default is NULL
+    * `end`: **(long)** end timestamp in milliseconds, default is NULL
+    * return:
+      * `{ sender:int16, num:int64 }`   sender: user num,  num: message num
+

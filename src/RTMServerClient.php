@@ -4,8 +4,8 @@ namespace highras\rtm;
 
 use highras\fpnn\TCPClient;
 
-define("RTM_SDK_VERSION", "1.0.8");
-define("RTM_API_VERSION", "2.5.0");
+define("RTM_SDK_VERSION", "1.0.9");
+define("RTM_API_VERSION", "2.6.1");
 
 define("RTM_CHAT_MTYPE", 30);
 define("RTM_CMD_MTYPE", 32);
@@ -1637,7 +1637,7 @@ class RTMServerClient
         return isset($res['uids']) ? $res['uids'] : array();
     }
 
-    public function getRoomCount($rid)
+    public function getRoomCount($rids)
     {
         $salt = $this->generateSalt();
         $ts = time();
@@ -1646,9 +1646,14 @@ class RTMServerClient
             'sign' => $this->generateSignature($salt, 'getroomcount', $ts),
             'salt' => $salt,
             'ts' => $ts,
-            'rid' => $rid
+            'rids' => $rids
         ));
-        return isset($res['cn']) ? $res['cn'] : 0;
+        $count = array();
+        if (isset($res['cn']) && is_array($res['cn'])) {
+            foreach ($res['cn'] as $k => $v)
+                $count[intval($k)] = $v;
+        }
+        return $count;
     }
 
 
@@ -1764,7 +1769,17 @@ class RTMServerClient
             'ts' => $ts,
             'uid' => $uid
         ));
-        return array('p2p' => isset($res['p2p']) ? (array)$res['p2p'] : array(), 'group' => isset($res['group']) ? (array)$res['group'] : array());
+        $p2p = array();
+        $group = array();
+        if (isset($res['p2p']) && is_array($res['p2p'])) {
+            foreach ($res['p2p'] as $k => $v)
+                $p2p[intval($k)] = $v;
+        }
+        if (isset($res['group']) && is_array($res['group'])) {
+            foreach ($res['group'] as $k => $v)
+                $group[intval($k)] = $v;
+        }
+        return array('p2p' => $p2p, 'group' => $group);
 	}
     
     public function removeToken($uid)
@@ -1821,6 +1836,32 @@ class RTMServerClient
             'uid' => (int)$uid,
             'key' => $key
         ]);
+    }
+
+    public function getMessageNum($type, $xid, $mtypes = NULL, $begin = NULL, $end = NULL)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $params = array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'getmsgnum', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'type' => $type,
+            'xid' => $xid
+        );
+        if ($mtypes != NULL)
+            $params['mtypes'] = $mtypes;
+        if ($begin != NULL)
+            $params['begin'] = $begin;
+        if ($end != NULL)
+            $params['end'] = $end;
+
+        $res = $this->client->sendQuest("getmsgnum", $params);
+        return array(
+            'sender' => isset($res['sender']) ? intval($res['sender']) : 0,
+            'num' => isset($res['num']) ? intval($res['num']) : 0
+        );
     }
 
 
