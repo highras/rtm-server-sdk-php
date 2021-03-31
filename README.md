@@ -89,6 +89,10 @@ Please refer [Device Functions](doc/Device.md)
 
 Please refer [Data Functions](doc/Data.md)
 
+### RTC Functions
+
+Please refer [RTC Functions](doc/Rtc.md)
+
 ### Error Codes
 
 Please refer [RTM Error Codes](https://github.com/highras/rtm-server-sdk-php/blob/master/src/RTMErrorCode.php)

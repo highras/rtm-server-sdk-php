@@ -33,6 +33,5 @@
     * return:
       * oinfo   
       
-* `kickOut($uid, $ce = null)`: Kickout a user
+* `kickOut($uid)`: Kickout a user
     * `uid`: **(long)** User ID
-    * `ce`: **(strring)** If ce is not empty, only one of the connections will be kicked out, used in multi-user login situation      

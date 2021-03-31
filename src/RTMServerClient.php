@@ -4,8 +4,8 @@ namespace highras\rtm;
 
 use highras\fpnn\TCPClient;
 
-define("RTM_SDK_VERSION", "1.0.9");
-define("RTM_API_VERSION", "2.6.1");
+define("RTM_SDK_VERSION", "1.0.10");
+define("RTM_API_VERSION", "2.7.0");
 
 define("RTM_CHAT_MTYPE", 30);
 define("RTM_CMD_MTYPE", 32);
@@ -1679,7 +1679,7 @@ class RTMServerClient
      * @param null|string $ce client endpoint
      * @throws \Exception
      */
-    public function kickOut($uid, $ce = null)
+    public function kickOut($uid)
     {
         $salt = $this->generateSalt();
         $ts = time();
@@ -1688,8 +1688,7 @@ class RTMServerClient
             'sign' => $this->generateSignature($salt, 'kickout', $ts),
             'salt' => $salt,
             'ts' => $ts,
-            'uid' => (int)$uid,
-            'ce' => $ce
+            'uid' => (int)$uid
         ]);
     }
 
@@ -1864,5 +1863,119 @@ class RTMServerClient
         );
     }
 
+    public function inviteUserIntoVoiceRoom($rid, $toUids, $fromUid)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        return $this->client->sendQuest('inviteUserIntoVoiceRoom', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'inviteUserIntoVoiceRoom', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'rid' => (int)$rid,
+            'toUids' => $toUids,
+            'fromUid' => $fromUid
+        ]);
+    }
+
+    public function closeVoiceRoom($rid)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        return $this->client->sendQuest('closeVoiceRoom', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'closeVoiceRoom', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'rid' => (int)$rid
+        ]);
+    }
+
+    public function kickoutFromVoiceRoom($uid, $rid, $fromUid)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        return $this->client->sendQuest('kickoutFromVoiceRoom', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'kickoutFromVoiceRoom', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'uid' => (int)$uid,
+            'rid' => (int)$rid,
+            'fromUid' => (int)$fromUid
+        ]);
+    }
+
+    public function getVoiceRoomList()
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $res = $this->client->sendQuest("getVoiceRoomList", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'getVoiceRoomList', $ts),
+            'salt' => $salt,
+            'ts' => $ts
+        ));
+        return isset($res['rids']) ? $res['rids'] : array();
+    }
+
+    public function getVoiceRoomMembers($rid)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $res = $this->client->sendQuest("getVoiceRoomMembers", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'getVoiceRoomMembers', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'rid' => $rid
+        ));
+        $result = array();
+        $result['uids'] = isset($res['uids']) ? $res['uids'] : array();
+        $result['managers'] = isset($res['managers']) ? $res['managers'] : array();
+        return $result;
+    }
+
+    public function getVoiceRoomMemberCount($rid)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $res = $this->client->sendQuest("getVoiceRoomMemberCount", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'getVoiceRoomMemberCount', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'rid' => $rid
+        ));
+        return isset($res['count']) ? $res['count'] : 0;
+    }
+
+    public function setVoiceRoomMicStatus($rid, $status)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        return $this->client->sendQuest('setVoiceRoomMicStatus', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'setVoiceRoomMicStatus', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'rid' => (int)$rid,
+            'status' => $status
+        ]);
+    }
+
+    public function pullIntoVoiceRoom($rid, $toUids)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        return $this->client->sendQuest('setVoiceRoomMicStatus', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'setVoiceRoomMicStatus', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'rid' => (int)$rid,
+            'toUids' => $toUids
+        ]);
+    }
 
 }
