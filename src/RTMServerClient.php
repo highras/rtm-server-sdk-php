@@ -4,7 +4,7 @@ namespace highras\rtm;
 
 use highras\fpnn\TCPClient;
 
-define("RTM_SDK_VERSION", "1.0.10");
+define("RTM_SDK_VERSION", "1.0.11");
 define("RTM_API_VERSION", "2.7.0");
 
 define("RTM_CHAT_MTYPE", 30);
@@ -1968,9 +1968,9 @@ class RTMServerClient
     {
         $salt = $this->generateSalt();
         $ts = time();
-        return $this->client->sendQuest('setVoiceRoomMicStatus', [
+        return $this->client->sendQuest('pullIntoVoiceRoom', [
             'pid' => $this->pid,
-            'sign' => $this->generateSignature($salt, 'setVoiceRoomMicStatus', $ts),
+            'sign' => $this->generateSignature($salt, 'pullIntoVoiceRoom', $ts),
             'salt' => $salt,
             'ts' => $ts,
             'rid' => (int)$rid,
