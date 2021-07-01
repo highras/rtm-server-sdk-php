@@ -4,7 +4,7 @@ namespace highras\rtm;
 
 use highras\fpnn\TCPClient;
 
-define("RTM_SDK_VERSION", "1.0.12");
+define("RTM_SDK_VERSION", "1.0.13");
 define("RTM_API_VERSION", "2.7.0");
 
 define("RTM_CHAT_MTYPE", 30);
@@ -1863,13 +1863,13 @@ class RTMServerClient
         );
     }
 
-    public function inviteUserIntoVoiceRoom($rid, $toUids, $fromUid)
+    public function inviteUserIntoRTCRoom($rid, $toUids, $fromUid)
     {
         $salt = $this->generateSalt();
         $ts = time();
-        $this->client->sendQuest('inviteUserIntoVoiceRoom', [
+        $this->client->sendQuest('inviteUserIntoRTCRoom', [
             'pid' => $this->pid,
-            'sign' => $this->generateSignature($salt, 'inviteUserIntoVoiceRoom', $ts),
+            'sign' => $this->generateSignature($salt, 'inviteUserIntoRTCRoom', $ts),
             'salt' => $salt,
             'ts' => $ts,
             'rid' => (int)$rid,
@@ -1878,26 +1878,26 @@ class RTMServerClient
         ]);
     }
 
-    public function closeVoiceRoom($rid)
+    public function closeRTCRoom($rid)
     {
         $salt = $this->generateSalt();
         $ts = time();
-        $this->client->sendQuest('closeVoiceRoom', [
+        $this->client->sendQuest('closeRTCRoom', [
             'pid' => $this->pid,
-            'sign' => $this->generateSignature($salt, 'closeVoiceRoom', $ts),
+            'sign' => $this->generateSignature($salt, 'closeRTCRoom', $ts),
             'salt' => $salt,
             'ts' => $ts,
             'rid' => (int)$rid
         ]);
     }
 
-    public function kickoutFromVoiceRoom($uid, $rid, $fromUid)
+    public function kickoutFromRTCRoom($uid, $rid, $fromUid)
     {
         $salt = $this->generateSalt();
         $ts = time();
-        $this->client->sendQuest('kickoutFromVoiceRoom', [
+        $this->client->sendQuest('kickoutFromRTCRoom', [
             'pid' => $this->pid,
-            'sign' => $this->generateSignature($salt, 'kickoutFromVoiceRoom', $ts),
+            'sign' => $this->generateSignature($salt, 'kickoutFromRTCRoom', $ts),
             'salt' => $salt,
             'ts' => $ts,
             'uid' => (int)$uid,
@@ -1906,43 +1906,44 @@ class RTMServerClient
         ]);
     }
 
-    public function getVoiceRoomList()
+    public function getRTCRoomList()
     {
         $salt = $this->generateSalt();
         $ts = time();
-        $res = $this->client->sendQuest("getVoiceRoomList", array(
+        $res = $this->client->sendQuest("getRTCRoomList", array(
             'pid' => $this->pid,
-            'sign' => $this->generateSignature($salt, 'getVoiceRoomList', $ts),
+            'sign' => $this->generateSignature($salt, 'getRTCRoomList', $ts),
             'salt' => $salt,
             'ts' => $ts
         ));
         return isset($res['rids']) ? $res['rids'] : array();
     }
 
-    public function getVoiceRoomMembers($rid)
+    public function getRTCRoomMembers($rid)
     {
         $salt = $this->generateSalt();
         $ts = time();
-        $res = $this->client->sendQuest("getVoiceRoomMembers", array(
+        $res = $this->client->sendQuest("getRTCRoomMembers", array(
             'pid' => $this->pid,
-            'sign' => $this->generateSignature($salt, 'getVoiceRoomMembers', $ts),
+            'sign' => $this->generateSignature($salt, 'getRTCRoomMembers', $ts),
             'salt' => $salt,
             'ts' => $ts,
             'rid' => $rid
         ));
         $result = array();
         $result['uids'] = isset($res['uids']) ? $res['uids'] : array();
-        $result['managers'] = isset($res['managers']) ? $res['managers'] : array();
+        $result['administrators'] = isset($res['administrators']) ? $res['administrators'] : array();
+        $result['owner'] = isset($res['owner']) ? $res['owner'] : 0;
         return $result;
     }
 
-    public function getVoiceRoomMemberCount($rid)
+    public function getRTCRoomMemberCount($rid)
     {
         $salt = $this->generateSalt();
         $ts = time();
-        $res = $this->client->sendQuest("getVoiceRoomMemberCount", array(
+        $res = $this->client->sendQuest("getRTCRoomMemberCount", array(
             'pid' => $this->pid,
-            'sign' => $this->generateSignature($salt, 'getVoiceRoomMemberCount', $ts),
+            'sign' => $this->generateSignature($salt, 'getRTCRoomMemberCount', $ts),
             'salt' => $salt,
             'ts' => $ts,
             'rid' => $rid
@@ -1950,13 +1951,13 @@ class RTMServerClient
         return isset($res['count']) ? $res['count'] : 0;
     }
 
-    public function setVoiceRoomMicStatus($rid, $status)
+    public function setRTCRoomMicStatus($rid, $status)
     {
         $salt = $this->generateSalt();
         $ts = time();
-        $this->client->sendQuest('setVoiceRoomMicStatus', [
+        $this->client->sendQuest('setRTCRoomMicStatus', [
             'pid' => $this->pid,
-            'sign' => $this->generateSignature($salt, 'setVoiceRoomMicStatus', $ts),
+            'sign' => $this->generateSignature($salt, 'setRTCRoomMicStatus', $ts),
             'salt' => $salt,
             'ts' => $ts,
             'rid' => (int)$rid,
@@ -1964,17 +1965,33 @@ class RTMServerClient
         ]);
     }
 
-    public function pullIntoVoiceRoom($rid, $toUids)
+    public function pullIntoRTCRoom($rid, $toUids, $type)
     {
         $salt = $this->generateSalt();
         $ts = time();
-        $this->client->sendQuest('pullIntoVoiceRoom', [
+        $this->client->sendQuest('pullIntoRTCRoom', [
             'pid' => $this->pid,
-            'sign' => $this->generateSignature($salt, 'pullIntoVoiceRoom', $ts),
+            'sign' => $this->generateSignature($salt, 'pullIntoRTCRoom', $ts),
             'salt' => $salt,
             'ts' => $ts,
             'rid' => (int)$rid,
-            'toUids' => $toUids
+            'toUids' => $toUids,
+            'type' => $type
+        ]);
+    }
+
+    public function adminCommand($rid, $uids, $command)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $this->client->sendQuest('adminCommand', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'adminCommand', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'rid' => (int)$rid,
+            'uids' => $uids,
+            'command' => $command
         ]);
     }
 
