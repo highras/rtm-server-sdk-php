@@ -34,6 +34,14 @@
     * `rid`: **(long)** Room ID     
     * `uid`: **(long)** User ID
 
+* `addUserRooms($uid, $rids)`: Add user to rooms
+    * `uid`: **(long)** Member User ID
+    * `rids`: **(array(long))** Room IDs
+
+* `deleteUserRooms($uid, $rids)`: Delete user from rooms
+    * `uid`: **(long)** Member User ID
+    * `rids`: **(array(long))** Room IDs
+
 * `getRoomMembers($rid)`: Get members of room
     * `rid`: **(long)** Room ID     
     * return:

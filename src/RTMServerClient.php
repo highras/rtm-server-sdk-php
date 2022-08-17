@@ -4,7 +4,7 @@ namespace highras\rtm;
 
 use highras\fpnn\TCPClient;
 
-define("RTM_SDK_VERSION", "1.0.13");
+define("RTM_SDK_VERSION", "1.0.14");
 define("RTM_API_VERSION", "2.7.0");
 
 define("RTM_CHAT_MTYPE", 30);
@@ -1018,6 +1018,34 @@ class RTMServerClient
             'salt' => $salt,
             'ts' => $ts,
             'rid' => $rid,
+            'uid' => $uid
+        ));
+    }
+
+    public function addUserRooms($uid, $rids)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $this->client->sendQuest("adduserrooms", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'adduserrooms', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'rids' => $rids,
+            'uid' => $uid
+        ));
+    }
+
+    public function deleteUserRooms($uid, $rids)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $this->client->sendQuest("deleteuserrooms", array(
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'deleteuserrooms', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'rids' => $rids,
             'uid' => $uid
         ));
     }
