@@ -1891,6 +1891,35 @@ class RTMServerClient
         );
     }
 
+    public function addSessions($uid, $uids)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $this->client->sendQuest('addsessions', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'addsessions', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'uid' => (int)$uid,
+            'uids' => $uids,
+        ]);
+    }
+
+    public function removeSessions($uid, $uids, $oneway = false)
+    {
+        $salt = $this->generateSalt();
+        $ts = time();
+        $this->client->sendQuest('removesessions', [
+            'pid' => $this->pid,
+            'sign' => $this->generateSignature($salt, 'removesessions', $ts),
+            'salt' => $salt,
+            'ts' => $ts,
+            'uid' => (int)$uid,
+            'uids' => $uids,
+            'oneway' => $oneway,
+        ]);
+    }
+
     public function inviteUserIntoRTCRoom($rid, $toUids, $fromUid)
     {
         $salt = $this->generateSalt();

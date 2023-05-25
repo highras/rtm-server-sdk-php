@@ -35,3 +35,12 @@
       
 * `kickOut($uid)`: Kickout a user
     * `uid`: **(long)** User ID
+
+* `addSessions($uid, $uids)`: Add sessions
+    * `uid`: **(long)** User ID
+    * `uids`: **(array(long))** Target User IDs
+
+* `removeSessions($uid, $uids, $oneway = false)`: Remove sessions
+    * `uid`: **(long)** User ID
+    * `uids`: **(array(long))** Target User IDs
+    * `oneway`: **(bool)** Whether to remove in one direction
