@@ -20,13 +20,13 @@ Read this [web tip /wiki](http://webtips.krajee.com/setting-composer-minimum-sta
 Either run
 
 ```
-$ php composer.phar require highras/rtm "dev-master"
+$ php composer.phar require highras/rtm $LATEST_VERSION
 ```
 
 or add
 
 ```
-"highras/rtm": "dev-master"
+"highras/rtm": $LATEST_VERSION
 ```
 
 to the ```require``` section of your `composer.json` file.
@@ -37,11 +37,12 @@ to the ```require``` section of your `composer.json` file.
 
 ## API
 
-* `__construct($pid, $secretKey, $endpoint, $timeout = 5000)`: RTMServerClient Construct
+* `__construct($pid, $secretKey, $endpoint, $timeout = 5000, $autoReconnect = true)`: RTMServerClient Construct
     * `pid`: **(int)** Project ID
     * `secretKey`: **(string)** Secret key
     * `endpoint`: **(string)** Server endpoint
     * `timeout`: **(int)** connection timeout(ms)
+    * `autoReconnect`: **(bool)** support auto reconnect
     
 * `enableEncryptor($peerPubData)`: Enable encrypted connection
     * `peerPubData`: **(string)**  Certificate content

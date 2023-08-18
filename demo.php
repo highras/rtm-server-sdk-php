@@ -4,7 +4,7 @@ require_once "./vendor/autoload.php";
 
 use highras\rtm\RTMServerClient;
 
-$client = new RTMServerClient(11000001, 'ef3617e5-e886-4a4e-9eef-7263c0320628', '161.189.171.91:13315');
+$client = new RTMServerClient(11000001, 'xxxxx-xxxx-xxxx-xxxx', 'ENDPOINT_HOST');
 
 try {
     var_dump($client->getRoomMembers(111));

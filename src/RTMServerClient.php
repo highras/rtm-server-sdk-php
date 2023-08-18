@@ -4,7 +4,7 @@ namespace highras\rtm;
 
 use highras\fpnn\TCPClient;
 
-define("RTM_SDK_VERSION", "1.0.15");
+define("RTM_SDK_VERSION", "1.0.17");
 define("RTM_API_VERSION", "2.7.0");
 
 define("RTM_CHAT_MTYPE", 30);
@@ -68,12 +68,12 @@ class RTMServerClient
     private $midSeq = 0;
     private $saltSeq = 0;
 
-    function __construct($pid, $secretKey, $endpoint, $timeout = 5000)
+    function __construct($pid, $secretKey, $endpoint, $timeout = 5000, $autoReconnect = true)
     {
         $arr = explode(':', $endpoint);
         $this->pid = $pid;
         $this->secretKey = $secretKey;
-        $this->client = new TCPClient($arr[0], $arr[1], $timeout);
+        $this->client = new TCPClient($arr[0], $arr[1], $timeout, $autoReconnect);
     }
 
     public function enableEncryptor($peerPubData)
