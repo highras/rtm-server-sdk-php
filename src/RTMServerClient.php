@@ -92,7 +92,7 @@ class RTMServerClient
     {
         //return (int)((int)(microtime(true) * 1000) . mt_rand(10, 99999));
         $milliseconds = round(microtime(true) * 1000);
-        return ($milliseconds << 22) | (mt_rand(10, 99999) << 12) | $incrementId++;
+        return ($milliseconds << 22) | (mt_rand(10, 99999) << 12) | $this->incrementId++;
     }
 
     private function generateSalt()
