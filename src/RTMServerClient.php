@@ -4,7 +4,7 @@ namespace highras\rtm;
 
 use highras\fpnn\TCPClient;
 
-define("RTM_SDK_VERSION", "1.0.17");
+define("RTM_SDK_VERSION", "1.0.18");
 define("RTM_API_VERSION", "2.7.0");
 
 define("RTM_CHAT_MTYPE", 30);
@@ -67,6 +67,7 @@ class RTMServerClient
     private $secretKey;
     private $midSeq = 0;
     private $saltSeq = 0;
+    private $incrementId = 0;
 
     function __construct($pid, $secretKey, $endpoint, $timeout = 5000, $autoReconnect = true)
     {
@@ -89,7 +90,9 @@ class RTMServerClient
 
     private function generateMessageId()
     {
-        return (int)((int)(microtime(true) * 1000) . mt_rand(10, 99));
+        //return (int)((int)(microtime(true) * 1000) . mt_rand(10, 99999));
+        $milliseconds = round(microtime(true) * 1000);
+        return ($milliseconds << 22) | (mt_rand(10, 99999) << 12) | $incrementId++;
     }
 
     private function generateSalt()
