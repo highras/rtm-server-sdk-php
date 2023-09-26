@@ -4,7 +4,7 @@ namespace highras\rtm;
 
 use highras\fpnn\TCPClient;
 
-define("RTM_SDK_VERSION", "1.0.18");
+define("RTM_SDK_VERSION", "1.0.19");
 define("RTM_API_VERSION", "2.7.0");
 
 define("RTM_CHAT_MTYPE", 30);
@@ -90,9 +90,11 @@ class RTMServerClient
 
     private function generateMessageId()
     {
-        //return (int)((int)(microtime(true) * 1000) . mt_rand(10, 99999));
         $milliseconds = round(microtime(true) * 1000);
-        return ($milliseconds << 22) | (mt_rand(100000, 999999) << 16) | $this->incrementId++;
+        $this->incrementId++;
+        if ($this->incrementId < 0)
+            $this->incrementId = 0;
+        return ($milliseconds << 22) | (crc32(uniqid()) << 12) | (mt_rand(100000, 999999) << 10) | $this->incrementId;
     }
 
     private function generateSalt()
